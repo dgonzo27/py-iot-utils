@@ -1,0 +1,16 @@
+iot-edge-logger:
+  - iot-edge-logger/*
+
+iot-edge-validator:
+  - iot-edge-validator/*
+
+iot-samba-client:
+  - iot-samba-client/*
+
+iot-storage-client:
+  - iot-storage-client/*
+
+documentation:
+  - README.md
+  - ./*.md
+  - ./*/*.md

@@ -1,0 +1,31 @@
+name: Pull Request Linting
+
+on:
+  pull_request:
+
+jobs:
+  run-linting:
+    name: Run Linter
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Lint Codebase
+        uses: github/super-linter@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: develop
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_JSCPD: false
+          VALIDATE_PYTHON_MYPY: false
+          VALIDATE_GITHUB_ACTIONS: false
+          VALIDATE_PYTHON_ISORT: false
+          FILTER_REGEX_EXCLUDE: (.*tests/.*|*.md|.*assets/.*)
+          IGNORE_GITIGNORED_FILES: true

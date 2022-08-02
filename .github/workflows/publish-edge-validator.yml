@@ -1,0 +1,29 @@
+name: Publish IoT Edge Validator to PyPI
+
+on:
+  workflow_dispatch:
+
+env:
+  PYPI_USER: "__token__"
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Action
+        uses: actions/checkout@v2
+
+      - name: Setup Python v3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Build and Publish PyPI Package
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install setuptools wheel twine
+          python3 -m pip install --upgrade build
+          pushd "./iot-edge-validator"
+          python3 -m build
+          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+          popd
