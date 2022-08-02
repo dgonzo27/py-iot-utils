@@ -1,10 +1,10 @@
-# PR: IOT-YOUR-JIRA-TASK-NUM
+# PR: Title Goes Here
 
-[Jira Task](https://suncoragilecoe.atlassian.net/browse/IOT-YOUR-JIRA-TASK-NUM)
+closes #github-issue-number-here
 
 ## Description
 
-Paste the Jira tasks' title here!
+Paste the GitHub issue title here!
 
 Provide a description of what was changed:
 
