@@ -71,7 +71,7 @@ This section provides basic examples with the `iot-edge-logger`.
 
 ## Logging Considerations
 
-- [Retrieve log](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-retrieve-iot-edge-logs?view=iotedge-2018-06#recommended-logging-format) methods from the edge agent are tightly couple with [syslog severity level](https://en.wikipedia.org/wiki/Syslog#Severity_level) standards. For the best compatibility with the log retrieval feature provided by Azure, the recommended logging format is implemented by default with this package.
+- [Retrieve log](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-retrieve-iot-edge-logs?view=iotedge-2018-06#recommended-logging-format) methods from the edge agent are tightly coupled with [syslog severity level](https://en.wikipedia.org/wiki/Syslog#Severity_level) standards. For the best compatibility with the log retrieval feature provided by Azure, the recommended logging format is implemented by default with this package.
 
 - Some applications provide verbose logging, generating a lot of trace and information logs. While it's beneficial to know that your application is healthy, it is more important to take action when things go wrong and keep costs under control. Consider configuring with logs that match `warning` level or higher.
 
@@ -87,7 +87,7 @@ By leveraging the same built-in [retrieve logs](https://docs.microsoft.com/en-us
 
 An example architecture of the ideal scenario defined above may look something like this:
 
-![logging architecture](https://github.com/dgonzo27/py-iot-utils/tree/master/.github/assets/loggingArchitecture.png)
+![logging architecture](./assets/loggingArchitecture.png)
 
 And querying in log analytics would look something like this:
 
