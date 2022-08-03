@@ -1,5 +1,9 @@
 # Release History
 
+## 1.0.2 (08/02/2022)
+
+- README.md bug fix - diagram not loading properly
+
 ## 1.0.1 (08/02/2022)
 
 - Enhanced documentation - logging considerations, ideal scenarios and architectures, contributors guide.
