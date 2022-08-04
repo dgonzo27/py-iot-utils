@@ -1,5 +1,9 @@
 # Release History
 
+## 1.0.1 (08/04/2022)
+
+- Naming conventions bug fix
+
 ## 1.0.0 (08/02/2022)
 
 - Initial Release
