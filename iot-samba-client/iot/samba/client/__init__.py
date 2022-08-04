@@ -1,2 +1,2 @@
-from ._client import SuncorSambaClient
+from ._client import IoTSambaClient
 from ._version import __version__
