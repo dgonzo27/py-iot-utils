@@ -73,7 +73,7 @@ class IoTSambaClient:
         path: str,
         file: Optional[str] = "",
     ) -> Union[smbclient.SMBStatResult, None]:
-        """given a target location on the samba share, return info about the formatted path"""
+        """returns file information for a given path"""
         try:
             stat_path = "\\\\{host}\\{share}\\{path}\\{file}".format(
                 host=self.smb_host,

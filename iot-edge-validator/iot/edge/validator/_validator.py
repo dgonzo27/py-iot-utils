@@ -21,22 +21,28 @@ def compare_dictionary(
         if not isinstance(d1[k], type(d2[k])):
             return f"key {k} has different type between d1[{k}] and d2[{k}]"
 
-        if isinstance(d1[k], dict):
-            if recurse:
-                error = compare_dictionary(d1[k], d2[k])
-                if error:
-                    return f"{k}: {error}"
+        if isinstance(d1[k], dict) and recurse:
+            error = compare_dictionary(d1[k], d2[k])
+            if error:
+                return f"{k}: {error}"
 
-        elif isinstance(d1[k], list):
-            if recurse:
-                error = compare_list(d1[k], d2[k])
-                if error:
-                    return f"{k}: {error}"
+        if isinstance(d1[k], list) and recurse:
+            error = compare_list(d1[k], d2[k])
+            if error:
+                return f"{k}: {error}"
 
-        elif d1[k] != d2[k] and value_match == True:
-            return f"key {k} has different values between d1[{k}] and d2[{k}]"
+        if value_match:
+            error = compare_values(d1[k], d2[k])
+            if error:
+                return f"key {k} has different values between d1[{k}] and d2[{k}]"
 
     return ""
+
+
+def compare_values(v1: Any, v2: Any) -> str:
+    """compare to values"""
+    if v1 != v2:
+        return f"{v1} does not match {v2}"
 
 
 def compare_list(

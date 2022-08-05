@@ -1,4 +1,4 @@
-name: Pull Request Linting
+name: Pull Request Linter
 
 on:
   pull_request:

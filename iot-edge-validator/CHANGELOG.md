@@ -1,5 +1,11 @@
 # Release History
 
+## 1.0.1 (08/05/2022)
+
+- Standardized documentation
+
+- Test suite
+
 ## 1.0.0 (08/02/2022)
 
 - Initial Release

@@ -29,7 +29,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT License",
     author="Dylan Gonzales",
-    author_email="dylangonzales247@gmail.com",
+    author_email="py.iot.utils@gmail.com",
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3",
