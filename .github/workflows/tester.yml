@@ -25,7 +25,7 @@ jobs:
               - 'iot-storage-client/**'
 
       - name: Say Hello
-        if: contains(github.event.pull_request.labels.*.name, 'test')
+        if: contains(github.event.pull_request.title, 'test')
         run: echo "Hello Test"
 
       - name: Setup Python v3.9
