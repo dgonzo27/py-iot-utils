@@ -24,10 +24,6 @@ jobs:
             iot-storage-client:
               - 'iot-storage-client/**'
 
-      - name: Say Hello
-        if: contains(github.event.pull_request.title, 'test')
-        run: echo "Hello Test"
-
       - name: Setup Python v3.9
         uses: actions/setup-python@v2
         with:
