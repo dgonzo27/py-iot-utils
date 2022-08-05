@@ -1,0 +1,63 @@
+name: Pull Request Tester
+
+on:
+  pull_request:
+
+jobs:
+  test-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Action
+        uses: actions/checkout@v2
+
+      - name: Determine Changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            iot-edge-logger:
+              - 'iot-edge-logger/**'
+            iot-edge-validator:
+              - 'iot-edge-validator/**'
+            iot-samba-client:
+              - 'iot-samba-client/**'
+            iot-storage-client:
+              - 'iot-storage-client/**'
+
+      - name: Setup Python v3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Pip Install
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r ./dev-requirements.txt
+
+      - name: Test iot-edge-logger Package
+        if: steps.changes.outputs.iot-edge-logger == 'true'
+        run: |
+          pushd "./iot-edge-logger"
+          python3 -m unittest discover tests -b
+          popd
+
+      - name: Test iot-edge-validator Package
+        if: steps.changes.outputs.iot-edge-validator == 'true'
+        run: |
+          pushd "./iot-edge-validator"
+          python3 -m unittest discover tests -b
+          popd
+
+      - name: Test iot-samba-client Package
+        if: steps.changes.outputs.iot-samba-client == 'true'
+        run: |
+          pushd "./iot-samba-client"
+          python3 -m unittest discover tests -b
+          popd
+
+      - name: Test iot-storage-client Package
+        if: steps.changes.outputs.iot-storage-client == 'true'
+        run: |
+          pushd "./iot-storage-client"
+          python3 -m unittest discover tests -b
+          popd

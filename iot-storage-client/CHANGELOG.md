@@ -1,5 +1,11 @@
 # Release History
 
+## 1.1.1 (08/05/2022)
+
+- Standardized documentation
+
+- Updated azure-storage-blob dependency to v12.13.1
+
 ## 1.1.0 (08/05/2022)
 
 - Asynchronous and synchronous clients available

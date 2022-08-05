@@ -1,6 +1,6 @@
 # iot-edge-validator
 
-[![python version](https://img.shields.io/badge/python-v3.9-blue?logo=python&logoColor=yellow)](https://img.shields.io/badge/python-v3.9-blue?logo=python&logoColor=yellow) [![azure-iot-device](https://img.shields.io/badge/azure_iot_device-v2.11.0-blue?logo=microsoft-azure&logoColor=0078D4)](https://img.shields.io/badge/azure_iot_device-v2.11.0-blue?logo=microsoft-azure&logoColor=0078D4)
+[![python version](https://img.shields.io/badge/python_v3.9-blue?logo=python&logoColor=yellow)](https://img.shields.io/badge/python_v3.9-blue?logo=python&logoColor=yellow) [![pre-commit](https://img.shields.io/badge/pre--commit-blue?logo=pre-commit&logoColor=FAB040)](https://img.shields.io/badge/pre--commit-blue?logo=pre-commit&logoColor=FAB040) [![Keep a Changelog](https://img.shields.io/badge/keep_a_changelog-blue?logo=keepachangelog&logoColor=E05735)](https://img.shields.io/badge/keep_a_changelog-blue?logo=keepachangelog&logoColor=E05735) [![CI_CD GitHub_Actions](https://img.shields.io/badge/GitHub_Actions-blue?logo=githubactions&logoColor=black)](https://img.shields.io/badge/GitHub_Actions-blue?logo=githubactions&logoColor=black) [![package PyPI](https://img.shields.io/badge/PyPI-blue?logo=PyPI&logoColor=yellow)](https://img.shields.io/badge/PyPI-blue?logo=pypi&logoColor=yellow) [![azure-iot-device](https://img.shields.io/badge/azure_iot_device_v2.11.0-blue?logo=microsoft-azure&logoColor=black)](https://img.shields.io/badge/azure_iot_device-v2.11.0-blue?logo=microsoft-azure&logoColor=black)
 
 This package is a wrapper around the [azure-iot-device](https://pypi.org/project/azure-iot-device/) SDK to provide standardized exception handling and direct method request validation.
 
@@ -8,15 +8,17 @@ This package is a wrapper around the [azure-iot-device](https://pypi.org/project
 
 ## Table of Contents
 
+- [Versioning](#versioning)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Basic Examples](#basic-examples)
-- [API Documentation](#api-documentation)
-  - [Compare Dictionary Method](#compare-dictionary-method)
-  - [Generate Error Response Method](#generate-error-response-method)
-- [Contributing](#contributing)
-- [Versioning](#versioning)
-- [Deployment Process](#deployment-process)
+- [Compare Dictionary Method](#compare-dictionary-method)
+- [Format Exception Error Method](#format-exception-error-method)
+- [Generate Error Response Method](#generate-error-response-method)
+
+## Versioning
+
+This repository adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). It will be maintained through the `CHANGELOG.md` and in GitHub Releases. **It's important to note** that you must maintain the version with your releases in `iot/edge/validator/_version.py`, otherwise a new package version will fail to get published.
 
 ## Getting Started
 
@@ -52,7 +54,11 @@ This section provides basic examples with the `iot-edge-validator`.
 
    from azure.iot.device.iothub.models.methods import MethodRequest, MethodResponse
 
-   from iot.edge.validator import generate_error_response, compare_dictionary
+   from iot.edge.validator import (
+      format_exception_error,
+      generate_error_response,
+      compare_dictionary,
+    )
 
    EXPECTED_METHOD_NAME: str = "some_method_name"
 
@@ -90,9 +96,7 @@ This section provides basic examples with the `iot-edge-validator`.
        return None
    ```
 
-## API Documentation
-
-### Compare Dictionary Method
+## Compare Dictionary Method
 
 Compare two dictionaries for keys, optionally compare recursively and optionally compare for exact values to match.
 
@@ -122,7 +126,29 @@ compare_dictionary(d1, d2, value_match=False, recurse=True)
 
 Returns a string - either empty or containing an error message.
 
-### Generate Error Response Method
+## Format Exception Error Method
+
+Format exceptions using traceback.
+
+```python
+format_exception_error(context, exception)
+```
+
+**Parameters**
+
+- `context` str
+
+  The context of where your program was when the execption occurred.
+
+- `exception` Exception
+
+  The caught exception.
+
+**Returns**
+
+Returns a string containing the formatted exception error and tracing.
+
+## Generate Error Response Method
 
 Given a method request, generate an error response.
 
@@ -146,18 +172,4 @@ generate_error_response(request, message, status=500)
 
 **Returns**
 
-Returns a MethodResponse of type azure.iot.device.iothub.models.methods.MethodResponse.
-
-## Contributing
-
-Contributions and suggestions are welcomed. However, there is a level of responsibility placed on the contributor to follow best-practices, provide thorough testing, follow the branching strategy, use the pull request template, and maintain a positive and coachable attitude when receiving feedback or questions on your code.
-
-## Versioning
-
-This repository adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). It will be maintained through the `CHANGELOG.md` - as is standard with PyPI packages **It's important to note** that you must maintain the version with your releases in `iot/edge/validator/_version.py`, otherwise a new package version will fail to get published.
-
-## Deployment Process
-
-1. Linting, testing and building occurs when a pull request is made from a `features/*` branch to the `master` branch.
-
-2. Deployments to PyPI occur when an approved user triggers the GitHub Action. If the version has not been updated, this deployment will fail.
+Returns a MethodResponse of type `azure.iot.device.iothub.models.methods.MethodResponse`.

@@ -29,7 +29,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT License",
     author="Dylan Gonzales",
-    author_email="dylangonzales247@gmail.com",
+    author_email="py.iot.utils@gmail.com",
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3",
@@ -50,7 +50,7 @@ setup(
     python_requires=">=3.7",
     install_requires=[
         "aiohttp==3.8.1",
-        "azure-storage-blob==12.13.0",
+        "azure-storage-blob==12.13.1",
         "pydantic==1.9.0",
     ],
 )

@@ -21,8 +21,7 @@ jobs:
       - name: Build and Publish PyPI Package
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install setuptools wheel twine
-          python3 -m pip install --upgrade build
+          python3 -m pip install -r ./dev-requirements.txt
           pushd "./iot-edge-logger"
           python3 -m build
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
