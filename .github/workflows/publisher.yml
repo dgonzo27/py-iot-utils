@@ -13,49 +13,53 @@ jobs:
     steps:
       - name: Parse Release Tag
         id: release-tag
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=TAG::${{ github.event.release.tag_name }}
 
-      - name: Checkout Action
-        uses: actions/checkout@v2
-
-      - name: Setup Python v3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Pip Install
+      - name: Output Tag Name
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r ./dev-requirements.txt
+          echo ${{ steps.release-tag.outputs.TAG }}
 
-      - name: Build and Publish IoT Edge Logger to PyPI
-        if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-edge-logger')
-        run: |
-          pushd "./iot-edge-logger"
-          python3 -m build
-          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
-          popd
+      # - name: Checkout Action
+      #   uses: actions/checkout@v2
 
-      - name: Build and Publish IoT Edge Validator to PyPI
-        if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-edge-validator')
-        run: |
-          pushd "./iot-edge-validator"
-          python3 -m build
-          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
-          popd
+      # - name: Setup Python v3.9
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.9
 
-      - name: Build and Publish IoT Samba Client to PyPI
-        if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-samba-client')
-        run: |
-          pushd "./iot-samba-client"
-          python3 -m build
-          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
-          popd
+      # - name: Pip Install
+      #   run: |
+      #     python3 -m pip install --upgrade pip
+      #     python3 -m pip install -r ./dev-requirements.txt
 
-      - name: Build and Publish IoT Storage Client to PyPI
-        if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-storage-client')
-        run: |
-          pushd "./iot-storage-client"
-          python3 -m build
-          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
-          popd
+      # - name: Build and Publish IoT Edge Logger to PyPI
+      #   if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-edge-logger')
+      #   run: |
+      #     pushd "./iot-edge-logger"
+      #     python3 -m build
+      #     twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+      #     popd
+
+      # - name: Build and Publish IoT Edge Validator to PyPI
+      #   if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-edge-validator')
+      #   run: |
+      #     pushd "./iot-edge-validator"
+      #     python3 -m build
+      #     twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+      #     popd
+
+      # - name: Build and Publish IoT Samba Client to PyPI
+      #   if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-samba-client')
+      #   run: |
+      #     pushd "./iot-samba-client"
+      #     python3 -m build
+      #     twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+      #     popd
+
+      # - name: Build and Publish IoT Storage Client to PyPI
+      #   if: contains(${{ steps.release-tag.outputs.TAG }}, 'iot-storage-client')
+      #   run: |
+      #     pushd "./iot-storage-client"
+      #     python3 -m build
+      #     twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+      #     popd
