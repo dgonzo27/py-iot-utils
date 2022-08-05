@@ -18,7 +18,7 @@ jobs:
       - name: Test iot-edge-logger Package
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install pytz
+          python3 -m pip install pytz==2022.1
           pushd "./iot-edge-logger"
-          python3 -m unittest discover tests
+          python3 -m unittest discover tests -b
           popd
