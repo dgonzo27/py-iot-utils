@@ -48,5 +48,9 @@ setup(
         ]
     ),
     python_requires=">=3.7",
-    install_requires=["azure-storage-blob==12.13.0", "pydantic==1.9.0"],
+    install_requires=[
+        "aiohttp==3.8.1",
+        "azure-storage-blob==12.13.0",
+        "pydantic==1.9.0",
+    ],
 )
