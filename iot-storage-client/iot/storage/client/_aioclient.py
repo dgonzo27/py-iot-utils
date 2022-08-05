@@ -1,20 +1,16 @@
-"""wrapper for azure blob storage interactions"""
+"""wrapper for azure blob storage async interactions"""
 
 import os
 from typing import List, Optional, Union
 
-from azure.storage.blob import (
-    BlobClient,
-    BlobServiceClient,
-    ContainerClient,
-    ContentSettings,
-)
+from azure.storage.blob import ContentSettings
+from azure.storage.blob.aio import BlobClient, BlobServiceClient, ContainerClient
 
 from ._types import CredentialType, LocationType
 
 
-class IoTStorageClient:
-    """iot storage client"""
+class IoTStorageClientAsync:
+    """iot storage client async"""
 
     credential_type: str
     location_type: str
@@ -47,7 +43,7 @@ class IoTStorageClient:
 
     def __repr__(self) -> str:
         return (
-            "IoT Storage Client\n"
+            "IoT Storage Client Async\n"
             "---------------------\n"
             f"credential type: {self.credential_type.lower()}\n"
             f"location type: {self.location_type.lower()}\n"
@@ -83,37 +79,41 @@ class IoTStorageClient:
                 "invalid credential type, please use one of CredentialType[ACCOUNT_KEY, CONNECTION_STRING"
             )
 
-    def container_exists(self, container_name: str) -> bool:
+    async def container_exists(self, container_name: str) -> bool:
         """check if a container exists"""
         try:
-            container_client = self.service_client.get_container_client(
-                container=container_name
-            )
-            return container_client.exists()
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                exists = await container_client.exists()
+                return exists
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def file_exists(self, container_name: str, file_name: str) -> bool:
+    async def file_exists(self, container_name: str, file_name: str) -> bool:
         """check if a file exists"""
         try:
-            blob_client = self.service_client.get_blob_client(
-                container=container_name, blob=file_name
-            )
-            return blob_client.exists()
+            async with self.service_client:
+                blob_client = self.service_client.get_blob_client(
+                    container=container_name, blob=file_name
+                )
+                exists = await blob_client.exists()
+                return exists
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def download(self, container_name: str, source: str, dest: str) -> bool:
+    async def download(self, container_name: str, source: str, dest: str) -> bool:
         """download a file or directory to a path on the local filesystem"""
         try:
             if not dest:
                 raise Exception("a destination must be provided")
 
-            blobs = self.list_files(container_name, source, recursive=True)
+            blobs = await self.list_files(container_name, source, recursive=True)
             if blobs:
                 # if source is a directory, dest must also be a directory
                 if not source == "" and not source.endswith("/"):
@@ -126,16 +126,16 @@ class IoTStorageClient:
                 blobs = [source + blob for blob in blobs]
                 for blob in blobs:
                     blob_dest = dest + os.path.relpath(blob, source)
-                    self.download_file(container_name, blob, blob_dest)
+                    await self.download_file(container_name, blob, blob_dest)
             else:
-                self.download_file(container_name, source, dest)
+                await self.download_file(container_name, source, dest)
             return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def download_file(self, container_name: str, source: str, dest: str) -> bool:
+    async def download_file(self, container_name: str, source: str, dest: str) -> bool:
         """download a file to a path on the local filesystem"""
         try:
             if dest.endswith("."):
@@ -143,29 +143,31 @@ class IoTStorageClient:
             blob_dest = dest + os.path.basename(source) if dest.endswith("/") else dest
 
             os.makedirs(os.path.dirname(blob_dest), exist_ok=True)
-            blob_client = self.service_client.get_blob_client(
-                container=container_name, blob=blob_dest
-            )
 
-            if not dest.endswith("/"):
-                with open(blob_dest, "wb") as file:
-                    data = blob_client.download_blob()
-                    file.write(data.readall())
-                return True
-            return False
+            async with self.service_client:
+                blob_client = self.service_client.get_blob_client(
+                    container=container_name, blob=blob_dest
+                )
+
+                if not dest.endswith("/"):
+                    with open(blob_dest, "wb") as file:
+                        data = await blob_client.download_blob()
+                        file.write(data.readall())
+                    return True
+                return False
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def upload(self, container_name: str, source: str, dest: str) -> bool:
+    async def upload(self, container_name: str, source: str, dest: str) -> bool:
         """upload a file or directory to a path inside the container"""
         if os.path.isdir(source):
-            return self.upload_dir(container_name, source, dest)
+            return await self.upload_dir(container_name, source, dest)
         else:
-            return self.upload_file(container_name, source, dest)
+            return await self.upload_file(container_name, source, dest)
 
-    def upload_dir(self, container_name: str, source: str, dest: str) -> bool:
+    async def upload_dir(self, container_name: str, source: str, dest: str) -> bool:
         """upload a directory to a path inside the container"""
         try:
             prefix = "" if dest == "" else dest + "/"
@@ -176,14 +178,14 @@ class IoTStorageClient:
                     dir_part = "" if dir_part == "." else dir_part + "/"
                     file_path = os.path.join(root, name)
                     blob_path = prefix + dir_part + name
-                    self.upload_file(container_name, file_path, blob_path)
+                    await self.upload_file(container_name, file_path, blob_path)
             return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def upload_file(
+    async def upload_file(
         self,
         container_name: str,
         source: str,
@@ -193,27 +195,28 @@ class IoTStorageClient:
     ) -> bool:
         """upload a single file to a path inside the container"""
         try:
-            container_client = self.service_client.get_container_client(
-                container_name=container_name
-            )
-
-            with open(source, "rb") as data:
-                container_client.upload_blob(
-                    name=dest,
-                    data=data,
-                    overwrite=overwrite,
-                    content_settings=ContentSettings(content_type=content_type),
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container_name=container_name
                 )
-            return True
+
+                with open(source, "rb") as data:
+                    await container_client.upload_blob(
+                        name=dest,
+                        data=data,
+                        overwrite=overwrite,
+                        content_settings=ContentSettings(content_type=content_type),
+                    )
+                return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def delete_dir(self, container_name: str, path: str) -> bool:
+    async def delete_dir(self, container_name: str, path: str) -> bool:
         """remove a directory and its contents recursively"""
         try:
-            blobs = self.list_files(container_name, path, recursive=True)
+            blobs = await self.list_files(container_name, path, recursive=True)
             if not blobs:
                 return True
 
@@ -221,30 +224,32 @@ class IoTStorageClient:
                 path += "/"
             blobs = [path + blob for blob in blobs]
 
-            container_client = self.service_client.get_container_client(
-                container_name=container_name
-            )
-            container_client.delete_blobs(*blobs)
-            return True
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container_name=container_name
+                )
+                await container_client.delete_blobs(*blobs)
+                return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def delete_file(self, container_name: str, path: str) -> bool:
+    async def delete_file(self, container_name: str, path: str) -> bool:
         """remove a single file from a path inside the container"""
         try:
-            container_client = self.service_client.get_container_client(
-                container=container_name
-            )
-            container_client.delete_blob(path)
-            return True
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                await container_client.delete_blob(path)
+                return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
 
-    def list_files(
+    async def list_files(
         self, container_name: str, path: str, recursive: Optional[bool] = False
     ) -> Union[List[str], None]:
         """list files under a path, optionally recursive"""
@@ -252,23 +257,24 @@ class IoTStorageClient:
             if not path == "" and not path.endswith("/"):
                 path += "/"
 
-            container_client = self.service_client.get_container_client(
-                container=container_name
-            )
-            blob_iter = container_client.list_blobs(name_starts_with=path)
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                blob_iter = await container_client.list_blobs(name_starts_with=path)
 
-            files = []
-            for blob in blob_iter:
-                relative_path = os.path.relpath(blob.name, path)
-                if recursive or not "/" in relative_path:
-                    files.append(relative_path)
-            return files
+                files = []
+                for blob in blob_iter:
+                    relative_path = os.path.relpath(blob.name, path)
+                    if recursive or not "/" in relative_path:
+                        files.append(relative_path)
+                return files
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
         return None
 
-    def list_dirs(
+    async def list_dirs(
         self, container_name: str, path: str, recursive: Optional[bool] = False
     ) -> Union[List[str], None]:
         """list directories under a path, optionally recursive"""
@@ -276,21 +282,22 @@ class IoTStorageClient:
             if not path == "" and not path.endswith("/"):
                 path += "/"
 
-            container_client = self.service_client.get_container_client(
-                container=container_name
-            )
-            blob_iter = container_client.list_blobs(name_starts_with=path)
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                blob_iter = await container_client.list_blobs(name_starts_with=path)
 
-            dirs = []
-            for blob in blob_iter:
-                relative_dir = os.path.dirname(os.path.relpath(blob.name, path))
-                if (
-                    relative_dir
-                    and (recursive or not "/" in relative_dir)
-                    and not relative_dir in dirs
-                ):
-                    dirs.append(relative_dir)
-            return dirs
+                dirs = []
+                for blob in blob_iter:
+                    relative_dir = os.path.dirname(os.path.relpath(blob.name, path))
+                    if (
+                        relative_dir
+                        and (recursive or not "/" in relative_dir)
+                        and not relative_dir in dirs
+                    ):
+                        dirs.append(relative_dir)
+                return dirs
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
