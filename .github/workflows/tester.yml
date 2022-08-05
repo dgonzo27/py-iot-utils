@@ -26,7 +26,7 @@ jobs:
 
       - name: Say Hello
         if: contains(github.event.pull_request.name, 'test')
-        run: echo "Hello"
+        run: echo "Hello Test"
 
       - name: Setup Python v3.9
         uses: actions/setup-python@v2
