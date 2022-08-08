@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import { Footer } from "./footer";
 import { Navbar } from "./navbar";
 import { Sidebar } from "./sidebar";
 
@@ -30,6 +31,7 @@ export function Layout() {
       <LayoutWrapper>
         <LayoutContainer>
           <Outlet />
+          <Footer />
         </LayoutContainer>
       </LayoutWrapper>
     </>

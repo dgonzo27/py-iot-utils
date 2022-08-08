@@ -4,7 +4,7 @@
 
 This package is a wrapper around the [smbprotocol](https://pypi.org/project/smbprotocol/) SDK to provide a synchronous client for interacting with file shares from IoT edge devices.
 
-[Official Documentation]() | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-samba-client) | [Package PyPI](https://pypi.org/project/iot-samba-client/)
+[Official Documentation](https://py-iot-utils.azurewebsites.net/packages/iotSambaClient) | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-samba-client) | [Package PyPI](https://pypi.org/project/iot-samba-client/)
 
 ## Table of Contents
 

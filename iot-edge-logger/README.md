@@ -4,7 +4,7 @@
 
 This package is a custom log formatter to standardize, collect and analyze logs from IoT Edge Devices in an Azure Log Analytics Workspace.
 
-[Official Documentation]() | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-edge-logger) | [Package PyPI](https://pypi.org/project/iot-edge-logger/)
+[Official Documentation](https://py-iot-utils.azurewebsites.net/packages/iotEdgeLogger) | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-edge-logger) | [Package PyPI](https://pypi.org/project/iot-edge-logger/)
 
 ## Table of Contents
 

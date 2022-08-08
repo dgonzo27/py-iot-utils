@@ -4,7 +4,7 @@
 
 This package is a wrapper around the [azure-iot-device](https://pypi.org/project/azure-iot-device/) SDK to provide standardized exception handling and direct method request validation.
 
-[Official Documentation]() | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-edge-validator) | [Package PyPI](https://pypi.org/project/iot-edge-validator/)
+[Official Documentation](https://py-iot-utils.azurewebsites.net/packages/iotEdgeValidator) | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-edge-validator) | [Package PyPI](https://pypi.org/project/iot-edge-validator/)
 
 ## Table of Contents
 

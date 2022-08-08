@@ -4,7 +4,7 @@
 
 This package is a wrapper around the [azure-storage-blob](https://pypi.org/project/azure-storage-blob/) SDK to provide an asynchronous and synchronous client for interacting with Azure storage accounts in the cloud and on the edge.
 
-[Official Documentation]() | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-storage-client) | [Package PyPI](https://pypi.org/project/iot-storage-client/)
+[Official Documentation](https://py-iot-utils.azurewebsites.net/packages/iotStorageClient) ([async version](https://py-iot-utils.azurewebsites.net/packages/iotStorageClientAsync)) | [Source code](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-storage-client) | [Package PyPI](https://pypi.org/project/iot-storage-client/)
 
 ## Table of Contents
 

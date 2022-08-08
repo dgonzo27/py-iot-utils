@@ -4,13 +4,17 @@ title: iot-storage-client Changelog
 
 # Release History for iot-storage-client
 
-## 1.1.1 (08/05/2022)
+### 1.1.2 (08/08/2022)
+
+- Official Documentation site
+
+### 1.1.1 (08/05/2022)
 
 - Standardized documentation
 
 - Updated azure-storage-blob dependency to v12.13.1
 
-## 1.1.0 (08/05/2022)
+### 1.1.0 (08/05/2022)
 
 - Asynchronous and synchronous clients available
 
@@ -18,11 +22,11 @@ title: iot-storage-client Changelog
 
 - Test suite for versioning, async client and sync client
 
-## 1.0.1 (08/04/2022)
+### 1.0.1 (08/04/2022)
 
 - Naming conventions bug fix
 
-## 1.0.0 (08/02/2022)
+### 1.0.0 (08/02/2022)
 
 - Initial Release
 
