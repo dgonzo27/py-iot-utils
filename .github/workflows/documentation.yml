@@ -25,3 +25,4 @@ jobs:
           image: ${{ env.image_name }}
           folder: ./docs
           dockerfile: ./docs/Dockerfile
+          branch: features/docs
