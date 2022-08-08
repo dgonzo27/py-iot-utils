@@ -41,4 +41,4 @@ jobs:
           app-name: ${{ env.app_name }}
           slot-name: ${{ env.slot_name }}
           publish-profile: ${{ secrets.AZ_PUBLISH_PROFILE }}
-          images: "${{ env.container_registry_name }}.azurecr.io/${{ env.container_registry_name }}/${{ image_name }}/${{ image_name }}:${{ github.sha }}"
+          images: "${{ env.container_registry_name }}.azurecr.io/${{ env.container_registry_name }}/${{ env.image_name }}/${{ env.image_name }}:${{ github.sha }}"
