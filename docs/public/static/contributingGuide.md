@@ -93,4 +93,4 @@ In order to support and develop against the official documentation app, there ar
 
 ## Code of Conduct
 
-Before contributing to this repository, please review the [code of conduct](./CODE_OF_CONDUCT.md).
+Before contributing to this repository, please review the [code of conduct](/codeOfConduct).

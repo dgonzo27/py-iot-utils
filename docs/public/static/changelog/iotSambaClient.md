@@ -1,8 +1,8 @@
-# Release History
+---
+title: iot-samba-client Changelog
+---
 
-## 1.0.3 (08/08/2022)
-
-- Official Documentation site
+# Release History for iot-samba-client
 
 ## 1.0.2 (08/05/2022)
 

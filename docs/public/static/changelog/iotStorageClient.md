@@ -1,8 +1,8 @@
-# Release History
+---
+title: iot-storage-client Changelog
+---
 
-## 1.1.2 (08/08/2022)
-
-- Official Documentation site
+# Release History for iot-storage-client
 
 ## 1.1.1 (08/05/2022)
 

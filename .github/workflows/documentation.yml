@@ -1,0 +1,26 @@
+name: Deploy Documentation
+
+on:
+  workflow_dispatch:
+
+env:
+  container_registry_name: "pyiotutils"
+  image_name: "pyiotutils-docs"
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ACR Build and Push
+        uses: azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.AZURE_CLIENT_ID }}
+          service_principal_password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
+          registry: ${{ env.container_registry_name }}
+          repository: ${{ env.image_name }}
+          image: ${{ env.image_name }}
+          folder: ./docs
+          dockerfile: ./docs/Dockerfile
