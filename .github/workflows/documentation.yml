@@ -27,7 +27,7 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           folder: ./docs
           dockerfile: Dockerfile
-          branch: master
+          branch: features/docs
           tag: ${{ github.sha }}
 
   deploy:
