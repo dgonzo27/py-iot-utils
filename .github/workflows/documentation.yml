@@ -26,5 +26,5 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           folder: ./docs
           dockerfile: Dockerfile
-          branch: features/docs
+          branch: master
           tag: latest
