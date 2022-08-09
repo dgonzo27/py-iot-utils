@@ -1,0 +1,30 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  ACR_NAME: "pyiotutils"
+  IMAGE_NAME: "pyiotutils-docs"
+  SLOT_NAME: "production"
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: ACR Build and Push
+        uses: azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.AZURE_CLIENT_ID }}
+          service_principal_password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
+          registry: ${{ env.ACR_NAME }}
+          repository: ${{ env.IMAGE_NAME }}
+          image: ${{ env.IMAGE_NAME }}
+          folder: ./docs
+          dockerfile: Dockerfile
+          branch: features/docs
+          tag: latest
