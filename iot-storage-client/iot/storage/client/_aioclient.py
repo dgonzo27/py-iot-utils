@@ -1,6 +1,8 @@
 """wrapper for azure blob storage async interactions"""
 
 import os
+import tempfile
+import time
 from typing import List, Optional, Union
 
 from azure.storage.blob import ContentSettings
@@ -302,3 +304,104 @@ class IoTStorageClientAsync:
             print(f"unexpected exception occurred: {ex}")
             pass
         return None
+
+    async def copy_file(
+        self, container_name: str, source: str, dest_container: str, dest: str
+    ) -> bool:
+        """copy a file between any location within the same storage account"""
+        try:
+            # download to tempfile
+            temp_file = tempfile.NamedTemporaryFile()
+            download_result = await self.download_file(
+                container_name=container_name,
+                source=source,
+                dest=temp_file.name,
+            )
+            if not download_result:
+                print(f"unable to download file: {container_name}/{source}")
+                temp_file.close()
+                return False
+
+            # upload tempfile
+            upload_result = await self.upload_file(
+                container_name=dest_container,
+                source=temp_file.name,
+                dest=dest,
+            )
+            if not upload_result:
+                print(f"unable to upload file: {dest_container}/{dest}")
+                temp_file.close()
+                return False
+
+            # cleanup
+            temp_file.close()
+            return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            try:
+                temp_file.close()
+            except Exception:
+                pass
+            pass
+        return False
+
+    async def move_file(
+        self, container_name: str, source: str, dest_container: str, dest: str
+    ) -> bool:
+        """move a file between any location within the same storage account"""
+        try:
+            copy_result = await self.copy_file(
+                container_name, source, dest_container, dest
+            )
+            if not copy_result:
+                print(
+                    f"unable to move file: {container_name}/{source} -> {dest_container}/{dest}"
+                )
+                return False
+
+            delete_result = await self.delete_file(container_name, source)
+            if not delete_result:
+                print(f"unable to delete file after copy: {container_name}/{source}")
+                return False
+            return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
+
+    async def copy_from_url(
+        self,
+        source_url: str,
+        container_name: str,
+        dest: str,
+        timeout: Optional[int] = 100,
+    ) -> bool:
+        """copy a file from a URL to a path inside the container"""
+        try:
+            async with self.service_client:
+                blob_client = self.service_client.get_blob_client(
+                    container=container_name, blob=dest
+                )
+                await blob_client.start_copy_from_url(source_url)
+                for i in range(10):
+                    props = await blob_client.get_blob_properties()
+                    print(f"copy status: {props.copy.status}")
+                    if props.copy.status == "success":
+                        # complete!
+                        break
+                    time.sleep(timeout / 10)
+
+                if props.copy.status != "success":
+                    # if not complete after `timeout` seconds,
+                    # abort the operation safely
+                    props = await blob_client.get_blob_properties()
+                    print(f"timeout status: {props.copy.status}")
+                    await blob_client.abort_copy(props.copy.id)
+                    props = await blob_client.get_blob_properties()
+                    print(f"abort status: {props.copy.status}")
+                    return False
+                return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False

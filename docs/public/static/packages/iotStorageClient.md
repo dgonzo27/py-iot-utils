@@ -369,3 +369,93 @@ storage_client.list_files(container_name, path, recursive=False)
 **Returns**
 
 Returns a list of strings (file paths) or `None`.
+
+### Copy File Method
+
+Copy a file between any location within the same storage account.
+
+```python
+storage_client.copy_file(container_name, source, dest_container, dest)
+```
+
+**Parameters**
+
+- `container_name` str
+
+  The name of the container within the Azure storage account that the source file is located in.
+
+- `source` str
+
+  The name and path to the file within the Azure storage account to copy.
+
+- `dest_container` str
+
+  The name of the container within the Azure storage account where the file will be copied to.
+
+- `dest` str
+
+  The name and path to the file within the Azure storage account to create or copy to.
+
+**Returns**
+
+Returns a boolean - true if the file was copied, false if it was not.
+
+### Move File Method
+
+Move a file (cut and paste) between any location within the same storage account.
+
+```python
+storage_client.move_file(container_name, source, dest_container, dest)
+```
+
+**Parameters**
+
+- `container_name` str
+
+  The name of the container within the Azure storage account that the source file is located in.
+
+- `source` str
+
+  The name and path to the file within the Azure storage account to move.
+
+- `dest_container` str
+
+  The name of the container within the Azure storage account where the file will be moved to.
+
+- `dest` str
+
+  The name and path to the file within the Azure storage account to create or update.
+
+**Returns**
+
+Returns a boolean - true if the file was moved, false if it was not.
+
+### Copy From URL Method
+
+Copy a file from a URL to a path inside the container.
+
+```python
+storage_client.copy_from_url(source_url, container_name, dest, timeout=100)
+```
+
+**Parameters**
+
+- `source_url` str
+
+  The URL where the file is being copied from. For example, a SAS URL for another storage account.
+
+- `container_name` str
+
+  The name of the container within the Azure storage account where the file will be copied to.
+
+- `dest` str
+
+  The name and path to the file within the Azure storage account to create or update.
+
+- `timeout` Optional[str]
+
+  The time in seconds to wait for the copy operation to complete before timing out. Default is `100`.
+
+**Returns**
+
+Returns a boolean - true if the file was copied, false if it was not.
