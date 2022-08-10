@@ -1,5 +1,15 @@
 # Release History
 
+## 1.1.3 (08/09/2022)
+
+- Copy files between any location within the same storage account
+
+- Move files (cut and paste) between any location within the same storage account
+
+- Copy a file from a URL to a path inside the storage account
+
+- Generate SAS URL for a file inside the storage account
+
 ## 1.1.2 (08/08/2022)
 
 - Official Documentation site
