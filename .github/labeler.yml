@@ -17,3 +17,4 @@ documentation:
 
 workflow-actions:
   - .github/*
+  - .github/workflows/*
