@@ -12,6 +12,8 @@ title: iot-storage-client Changelog
 
 - Copy a file from a URL to a path inside the storage account
 
+- Generate SAS URL for a file inside the storage account
+
 ### 1.1.2 (08/08/2022)
 
 - Official Documentation site

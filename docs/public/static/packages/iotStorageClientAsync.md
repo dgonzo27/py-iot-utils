@@ -463,3 +463,53 @@ await storage_client.copy_from_url(source_url, container_name, dest, timeout=100
 **Returns**
 
 Returns a boolean - true if the file was copied, false if it was not.
+
+### Generate File SAS URL
+
+Generate a SAS URL for a given file inside the container.
+
+```python
+await storage_client.generate_file_sas_url(
+  container_name,
+  source,
+  read=True,
+  write=False,
+  delete=False,
+  start=None,
+  expiry=datetime.datetime.utcnow() + datetime.timedelta(minutes=15),
+)
+```
+
+**Parameters**
+
+- `container_name` str
+
+  The name of the container within the Azure storage account where the file is located.
+
+- `source` str
+
+  The name and path to the file within the Azure storage account used to generate a SAS URL.
+
+- `read` Optional[bool]
+
+  Determine if the SAS URL should grant read permission to the file. Default is `True`.
+
+- `write` Optional[bool]
+
+  Determine if the SAS URL should grant write permission to the file. Default is `False`.
+
+- `delete` Optional[bool]
+
+  Determine if the SAS URL should grant delete permission to the file. Default is `False`.
+
+- `start` Optional[Union[datetime.datetime, str]]
+
+  The start time for accessing the file via the SAS URL - a default of `None` sets the start time to the SAS URL's creation time.
+
+- `expiry` Optional[Union[datetime.datetime, str]]
+
+  The expiration time for accessing the file via the SAS URL. Default is `datetime.datetime.utcnow() + datetime.timedelta(minutes=15)`.
+
+**Returns**
+
+Returns a string or `None` - the SAS URL if successful, `None` if it was not.

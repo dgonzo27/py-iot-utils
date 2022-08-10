@@ -3,9 +3,10 @@
 import os
 import tempfile
 import time
+from datetime import datetime, timedelta
 from typing import List, Optional, Union
 
-from azure.storage.blob import ContentSettings
+from azure.storage.blob import ContentSettings, BlobSasPermissions, generate_blob_sas
 from azure.storage.blob.aio import BlobClient, BlobServiceClient, ContainerClient
 
 from ._types import CredentialType, LocationType
@@ -81,6 +82,14 @@ class IoTStorageClientAsync:
                 "invalid credential type, please use one of CredentialType[ACCOUNT_KEY, CONNECTION_STRING"
             )
 
+    def format_account_url(self) -> str:
+        """format the blob account url"""
+        if self.location_type == LocationType.CLOUD_BASED:
+            return f"https://{self.account_name}.blob.core.windows.net"
+        if self.location_type == LocationType.EDGE_BASED:
+            return f"http://{self.host}:{self.port}/{self.account_name}.blob.core.windows.net"
+        return "invalid LocationType"
+
     async def container_exists(self, container_name: str) -> bool:
         """check if a container exists"""
         try:
@@ -148,7 +157,7 @@ class IoTStorageClientAsync:
 
             async with self.service_client:
                 blob_client = self.service_client.get_blob_client(
-                    container=container_name, blob=blob_dest
+                    container=container_name, blob=source
                 )
 
                 if not dest.endswith("/"):
@@ -405,3 +414,50 @@ class IoTStorageClientAsync:
             print(f"unexpected exception occurred: {ex}")
             pass
         return False
+
+    async def generate_file_sas_url(
+        self,
+        container_name: str,
+        source: str,
+        read: Optional[bool] = True,
+        write: Optional[bool] = False,
+        delete: Optional[bool] = False,
+        start: Optional[Union[datetime, str]] = None,
+        expiry: Optional[Union[datetime, str]] = datetime.utcnow()
+        + timedelta(minutes=15),
+    ) -> Union[str, None]:
+        """generate a SAS URL for a given file inside the container"""
+        try:
+            async with self.service_client:
+                account_key = self.credential
+                if self.credential_type != CredentialType.ACCOUNT_KEY:
+                    account_key = self.service_client.credential.account_key
+
+                sas_token = generate_blob_sas(
+                    account_name=self.account_name,
+                    container_name=container_name,
+                    blob_name=source,
+                    account_key=account_key,
+                    permission=BlobSasPermissions(
+                        read=read,
+                        add=write,
+                        create=write,
+                        delete=delete,
+                        tag=write,
+                    ),
+                    start=start,
+                    expiry=expiry,
+                    ip=self.host,
+                )
+                if not sas_token:
+                    print(
+                        f"unable to generate SAS token: {self.account_name}/{container_name}/{source}"
+                    )
+                    return None
+
+                account_url = self.format_account_url()
+                return f"{account_url}/{container_name}/{source}{sas_token}"
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return None
