@@ -1,6 +1,6 @@
 # Release History
 
-## 1.1.3 (08/09/2022)
+## 1.1.3 (08/12/2022)
 
 - Copy files between any location within the same storage account
 
