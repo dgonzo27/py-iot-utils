@@ -1,9 +1,12 @@
 """wrapper for azure blob storage async interactions"""
 
 import os
+import tempfile
+import time
+from datetime import datetime, timedelta
 from typing import List, Optional, Union
 
-from azure.storage.blob import ContentSettings
+from azure.storage.blob import ContentSettings, BlobSasPermissions, generate_blob_sas
 from azure.storage.blob.aio import BlobClient, BlobServiceClient, ContainerClient
 
 from ._types import CredentialType, LocationType
@@ -79,6 +82,14 @@ class IoTStorageClientAsync:
                 "invalid credential type, please use one of CredentialType[ACCOUNT_KEY, CONNECTION_STRING"
             )
 
+    def format_account_url(self) -> str:
+        """format the blob account url"""
+        if self.location_type == LocationType.CLOUD_BASED:
+            return f"https://{self.account_name}.blob.core.windows.net"
+        if self.location_type == LocationType.EDGE_BASED:
+            return f"http://{self.host}:{self.port}/{self.account_name}.blob.core.windows.net"
+        return "invalid LocationType"
+
     async def container_exists(self, container_name: str) -> bool:
         """check if a container exists"""
         try:
@@ -146,7 +157,7 @@ class IoTStorageClientAsync:
 
             async with self.service_client:
                 blob_client = self.service_client.get_blob_client(
-                    container=container_name, blob=blob_dest
+                    container=container_name, blob=source
                 )
 
                 if not dest.endswith("/"):
@@ -298,6 +309,154 @@ class IoTStorageClientAsync:
                     ):
                         dirs.append(relative_dir)
                 return dirs
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return None
+
+    async def copy_file(
+        self, container_name: str, source: str, dest_container: str, dest: str
+    ) -> bool:
+        """copy a file between any location within the same storage account"""
+        try:
+            # download to tempfile
+            temp_file = tempfile.NamedTemporaryFile()
+            download_result = await self.download_file(
+                container_name=container_name,
+                source=source,
+                dest=temp_file.name,
+            )
+            if not download_result:
+                print(f"unable to download file: {container_name}/{source}")
+                temp_file.close()
+                return False
+
+            # upload tempfile
+            upload_result = await self.upload_file(
+                container_name=dest_container,
+                source=temp_file.name,
+                dest=dest,
+            )
+            if not upload_result:
+                print(f"unable to upload file: {dest_container}/{dest}")
+                temp_file.close()
+                return False
+
+            # cleanup
+            temp_file.close()
+            return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            try:
+                temp_file.close()
+            except Exception:
+                pass
+            pass
+        return False
+
+    async def move_file(
+        self, container_name: str, source: str, dest_container: str, dest: str
+    ) -> bool:
+        """move a file between any location within the same storage account"""
+        try:
+            copy_result = await self.copy_file(
+                container_name, source, dest_container, dest
+            )
+            if not copy_result:
+                print(
+                    f"unable to move file: {container_name}/{source} -> {dest_container}/{dest}"
+                )
+                return False
+
+            delete_result = await self.delete_file(container_name, source)
+            if not delete_result:
+                print(f"unable to delete file after copy: {container_name}/{source}")
+                return False
+            return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
+
+    async def copy_from_url(
+        self,
+        source_url: str,
+        container_name: str,
+        dest: str,
+        timeout: Optional[int] = 100,
+    ) -> bool:
+        """copy a file from a URL to a path inside the container"""
+        try:
+            async with self.service_client:
+                blob_client = self.service_client.get_blob_client(
+                    container=container_name, blob=dest
+                )
+                await blob_client.start_copy_from_url(source_url)
+                for i in range(10):
+                    props = await blob_client.get_blob_properties()
+                    print(f"copy status: {props.copy.status}")
+                    if props.copy.status == "success":
+                        # complete!
+                        break
+                    time.sleep(timeout / 10)
+
+                if props.copy.status != "success":
+                    # if not complete after `timeout` seconds,
+                    # abort the operation safely
+                    props = await blob_client.get_blob_properties()
+                    print(f"timeout status: {props.copy.status}")
+                    await blob_client.abort_copy(props.copy.id)
+                    props = await blob_client.get_blob_properties()
+                    print(f"abort status: {props.copy.status}")
+                    return False
+                return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
+
+    async def generate_file_sas_url(
+        self,
+        container_name: str,
+        source: str,
+        read: Optional[bool] = True,
+        write: Optional[bool] = False,
+        delete: Optional[bool] = False,
+        start: Optional[Union[datetime, str]] = None,
+        expiry: Optional[Union[datetime, str]] = datetime.utcnow()
+        + timedelta(minutes=15),
+    ) -> Union[str, None]:
+        """generate a SAS URL for a given file inside the container"""
+        try:
+            async with self.service_client:
+                account_key = self.credential
+                if self.credential_type != CredentialType.ACCOUNT_KEY:
+                    account_key = self.service_client.credential.account_key
+
+                sas_token = generate_blob_sas(
+                    account_name=self.account_name,
+                    container_name=container_name,
+                    blob_name=source,
+                    account_key=account_key,
+                    permission=BlobSasPermissions(
+                        read=read,
+                        add=write,
+                        create=write,
+                        delete=delete,
+                        tag=write,
+                    ),
+                    start=start,
+                    expiry=expiry,
+                    ip=self.host,
+                )
+                if not sas_token:
+                    print(
+                        f"unable to generate SAS token: {self.account_name}/{container_name}/{source}"
+                    )
+                    return None
+
+                account_url = self.format_account_url()
+                return f"{account_url}/{container_name}/{source}{sas_token}"
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass

@@ -59,5 +59,9 @@ jobs:
         if: steps.changes.outputs.iot-storage-client == 'true'
         run: |
           pushd "./iot-storage-client"
+          export INTEGRATION_TESTS="TRUE"
+          export ACCOUNT_NAME="${{ secrets.AZ_STORAGE_ACCT }}"
+          export ACCOUNT_KEY="${{ secrets.AZ_STORAGE_ACCT_KEY }}"
+          export CNX_STR="${{ secrets.AZ_STORAGE_ACCT_CNX_STR }}"
           python3 -m unittest discover tests -b
           popd
