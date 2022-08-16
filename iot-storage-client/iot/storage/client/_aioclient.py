@@ -65,7 +65,7 @@ class IoTStorageClientAsync:
 
     def instantiate_service_client(self) -> None:
         """init service_client based on credential and location types"""
-        if self.credential == CredentialType.CONNECTION_STRING:
+        if self.credential_type == CredentialType.CONNECTION_STRING:
             self.connection_string = self.credential
             self.service_client = BlobServiceClient.from_connection_string(
                 self.credential
