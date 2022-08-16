@@ -1,5 +1,11 @@
 # Release History
 
+## 1.1.5 (08/15/2022)
+
+- Support for SAS-based authentication
+
+- Support for AzureBlobStorageonIoTEdge (local connection)
+
 ## 1.1.4 (08/15/2022)
 
 - Bug fix for container client
