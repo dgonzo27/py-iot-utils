@@ -9,6 +9,11 @@ from typing import List, Optional, Union
 from azure.storage.blob import ContentSettings, BlobSasPermissions, generate_blob_sas
 from azure.storage.blob.aio import BlobClient, BlobServiceClient, ContainerClient
 
+from ._helpers import (
+    generate_cloud_conn_str,
+    generate_edge_conn_str,
+    generate_local_conn_str,
+)
 from ._types import CredentialType, LocationType
 
 
@@ -19,7 +24,9 @@ class IoTStorageClientAsync:
     location_type: str
     account_name: str
     credential: str
+    connection_string: str
 
+    module: Optional[str] = None
     host: Optional[str] = None
     port: Optional[str] = None
 
@@ -33,6 +40,7 @@ class IoTStorageClientAsync:
         location_type: str,
         account_name: str,
         credential: str,
+        module: Optional[str] = None,
         host: Optional[str] = None,
         port: Optional[str] = None,
     ) -> None:
@@ -40,6 +48,7 @@ class IoTStorageClientAsync:
         self.location_type = location_type
         self.account_name = account_name
         self.credential = credential
+        self.module = module
         self.host = host
         self.port = port
         self.instantiate_service_client()
@@ -57,37 +66,66 @@ class IoTStorageClientAsync:
     def instantiate_service_client(self) -> None:
         """init service_client based on credential and location types"""
         if self.credential_type == CredentialType.CONNECTION_STRING:
+            self.connection_string = self.credential
             self.service_client = BlobServiceClient.from_connection_string(
                 self.credential
             )
-        elif self.credential_type == CredentialType.ACCOUNT_KEY:
-            if self.location_type == LocationType.CLOUD_BASED:
-                self.service_client = BlobServiceClient(
-                    account_url=f"https://{self.account_name}.blob.core.windows.net",
-                    credential=self.credential,
-                )
-            elif self.location_type == LocationType.EDGE_BASED:
-                self.service_client = BlobServiceClient(
-                    account_url=f"http://{self.host}:{self.port}/{self.account_name}.blob.core.windows.net",
-                    credential=self.credential,
-                )
-            else:
-                self.location_type = "INVALID"
-                print(
-                    "invalid location type, please use one of LocationType[CLOUD_BASED, EDGE_BASED]"
-                )
         else:
-            self.credential_type = "INVALID"
-            print(
-                "invalid credential type, please use one of CredentialType[ACCOUNT_KEY, CONNECTION_STRING"
-            )
+            if self.location_type == LocationType.CLOUD_BASED:
+                connection_string = generate_cloud_conn_str(
+                    account=self.account_name,
+                    account_key=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_KEY
+                    else None,
+                    account_sas=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_SAS
+                    else None,
+                )
+                self.connection_string = connection_string
+                self.service_client = BlobServiceClient.from_connection_string(
+                    connection_string
+                )
+            if self.location_type == LocationType.EDGE_BASED:
+                connection_string = generate_edge_conn_str(
+                    host=self.host,
+                    port=self.port,
+                    account=self.account_name,
+                    account_key=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_KEY
+                    else None,
+                    account_sas=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_SAS
+                    else None,
+                )
+                self.connection_string = connection_string
+                self.service_client = BlobServiceClient.from_connection_string(
+                    connection_string
+                )
+            if self.location_type == LocationType.LOCAL_BASED:
+                connection_string = generate_local_conn_str(
+                    module=self.module,
+                    port=self.port,
+                    account=self.account_name,
+                    account_key=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_KEY
+                    else None,
+                    account_sas=self.credential
+                    if self.credential_type == CredentialType.ACCOUNT_SAS
+                    else None,
+                )
+                self.connection_string = connection_string
+                self.service_client = BlobServiceClient.from_connection_string(
+                    connection_string
+                )
 
     def format_account_url(self) -> str:
         """format the blob account url"""
         if self.location_type == LocationType.CLOUD_BASED:
             return f"https://{self.account_name}.blob.core.windows.net"
         if self.location_type == LocationType.EDGE_BASED:
-            return f"http://{self.host}:{self.port}/{self.account_name}.blob.core.windows.net"
+            return f"http://{self.host}:{self.port}/{self.account_name}"
+        if self.location_type == LocationType.LOCAL_BASED:
+            return f"http://{self.module}:{self.port}/{self.account_name}"
         return "invalid LocationType"
 
     async def container_exists(self, container_name: str) -> bool:

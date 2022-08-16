@@ -93,22 +93,18 @@ A wrapper client to interact with the Azure Blob Service asynchronously at the a
 This client provides operations to list, create and delete storage containers and blobs within the account.
 
 ```python
-IoTStorageClient(credential_type, location_type, account_name, credential, host=None, port=None)
-```
-
-```python
-IoTStorageClientAsync(credential_type, location_type, account_name, credential, host=None, port=None)
+IoTStorageClientAsync(credential_type, location_type, account_name, credential, module=None, host=None, port=None)
 ```
 
 **Parameters**
 
 - `credential_type` str
 
-  The type of credential that will be used for authentication. One of "ACCOUNT_KEY" or "CONNECTION_STRING".
+  The type of credential that will be used for authentication. One of `["ACCOUNT_KEY", "ACCOUNT_SAS", "CONNECTION_STRING"]`.
 
 - `location_type` str
 
-  The location of the Azure storage account. This allows for communicating with storage accounts that live on IoT Edge devices. One of "CLOUD_BASED" or "EDGE_BASED".
+  The location of the Azure storage account. This allows for communicating with storage accounts that live on IoT Edge devices. One of `["CLOUD_BASED", "EDGE_BASED", "LOCAL_BASED"]`.
 
 - `account_name` str
 
@@ -118,9 +114,13 @@ IoTStorageClientAsync(credential_type, location_type, account_name, credential, 
 
   The credential (account key or connection string), that is being used for authentication.
 
+- `module` Optional[str]
+
+  The module name for the Azure storage account when it lives on an IoT Edge device and `location_type` is `"LOCAL_BASED"`.
+
 - `host` Optional[str]
 
-  The DNS or IP address of the Azure storage account when it lives on an IoT Edge device.
+  The DNS or IP address of the Azure storage account when it lives on an IoT Edge device and `location_type` is `"EDGE_BASED"`.
 
 - `port` Optional[str]
 
