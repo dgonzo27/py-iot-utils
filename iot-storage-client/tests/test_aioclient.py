@@ -68,24 +68,6 @@ class TestAioClient(unittest.TestCase):
         self.assertEqual(storage_client.host, "myIPAddress")
         self.assertEqual(storage_client.port, "myPort")
 
-    def test_invalid_location_type_init(self):
-        storage_client = IoTStorageClientAsync(
-            credential_type="ACCOUNT_KEY",
-            location_type="somewhere_over_the_rainbow",
-            account_name="myStorageAccount",
-            credential="myAccountKey",
-        )
-        self.assertEqual(storage_client.location_type, "INVALID")
-
-    def test_invalid_credential_type_init(self):
-        storage_client = IoTStorageClientAsync(
-            credential_type="street_cred",
-            location_type="CLOUD_BASED",
-            account_name="myStorageAccount",
-            credential="myAccountKey",
-        )
-        self.assertEqual(storage_client.credential_type, "INVALID")
-
 
 if __name__ == "__main__":
     unittest.main()
