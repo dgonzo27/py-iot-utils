@@ -208,7 +208,7 @@ class IoTStorageClientAsync:
         try:
             async with self.service_client:
                 container_client = self.service_client.get_container_client(
-                    container_name=container_name
+                    container=container_name
                 )
 
                 with open(source, "rb") as data:
@@ -237,7 +237,7 @@ class IoTStorageClientAsync:
 
             async with self.service_client:
                 container_client = self.service_client.get_container_client(
-                    container_name=container_name
+                    container=container_name
                 )
                 await container_client.delete_blobs(*blobs)
                 return True

@@ -207,7 +207,7 @@ class IoTStorageClient:
         """upload a single file to a path inside the container"""
         try:
             container_client = self.service_client.get_container_client(
-                container_name=container_name
+                container=container_name
             )
 
             with open(source, "rb") as data:
@@ -235,7 +235,7 @@ class IoTStorageClient:
             blobs = [path + blob for blob in blobs]
 
             container_client = self.service_client.get_container_client(
-                container_name=container_name
+                container=container_name
             )
             container_client.delete_blobs(*blobs)
             return True
