@@ -45,17 +45,22 @@ class IoTSambaClient:
 
     def instantiate_smb_session(self) -> None:
         """init smb_session based on input params"""
-        hostname = socket.gethostname()
-        self.local_ip = socket.gethostbyname(hostname)
+        try:
+            hostname = socket.gethostname()
+            self.local_ip = socket.gethostbyname(hostname)
 
-        smbclient.ClientConfig(username=self.smb_user, password=self.smb_pass)
-        self.smb_session = smbclient.register_session(
-            server=self.smb_host,
-            username=self.smb_user,
-            password=self.smb_pass,
-            port=self.smb_port,
-            connection_timeout=30,
-        )
+            smbclient.ClientConfig(username=self.smb_user, password=self.smb_pass)
+            self.smb_session = smbclient.register_session(
+                server=self.smb_host,
+                username=self.smb_user,
+                password=self.smb_pass,
+                port=self.smb_port,
+                connection_timeout=30,
+            )
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return
 
     def is_connected(self) -> bool:
         """checks if the current session is connected to the smbclient"""

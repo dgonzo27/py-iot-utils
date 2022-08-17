@@ -36,7 +36,7 @@ class IoTSFTPClient:
             f"user: {self.sftp_user}"
         )
 
-    def instantiate_sftp_session(self) -> None:
+    def instantiate_sftp_session(self):
         """init sftp_session based on input params"""
         try:
             self.sftp_session = pysftp.Connection(
@@ -48,7 +48,7 @@ class IoTSFTPClient:
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
-        return None
+        return
 
     def is_connected(self) -> bool:
         """checks if the current session is connected to the sftpclient"""

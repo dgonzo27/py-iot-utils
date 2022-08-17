@@ -138,3 +138,7 @@ class TestIntegrationClient(unittest.TestCase):
                 CONTAINER_TWO, "test.txt"
             )
             self.assertEqual(delete_result, True)
+
+
+if __name__ == "__main__":
+    unittest.main()
