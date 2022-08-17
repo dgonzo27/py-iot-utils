@@ -111,11 +111,21 @@ class IoTSambaClient:
                 path=path,
                 file=file,
             )
+            if dest.endswith("."):
+                dest += "/"
+            blob_dest = (
+                dest + os.path.basename(file_path) if dest.endswith("/") else dest
+            )
+
+            os.makedirs(os.path.dirname(blob_dest), exist_ok=True)
             with smbclient.open_file(file_path, mode="rb") as fd:
                 file_bytes = fd.read()
-            with open(dest, "wb") as file:
-                file.write(file_bytes)
-            return True
+
+            if not dest.endswith("/"):
+                with open(blob_dest, "wb") as file:
+                    file.write(file_bytes)
+                return True
+            return False
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
