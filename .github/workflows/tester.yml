@@ -40,37 +40,38 @@ jobs:
         if: steps.changes.outputs.iot-edge-logger == 'true'
         run: |
           pushd "./iot-edge-logger"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd
 
       - name: Test iot-edge-validator Package
         if: steps.changes.outputs.iot-edge-validator == 'true'
         run: |
           pushd "./iot-edge-validator"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd
 
       - name: Test iot-samba-client Package
         if: steps.changes.outputs.iot-samba-client == 'true'
         run: |
           pushd "./iot-samba-client"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd
 
       - name: Test iot-sftp-client Package
         if: steps.changes.outputs.iot-sftp-client == 'true'
         run: |
           pushd "./iot-sftp-client"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd
 
       - name: Test iot-storage-client Package
         if: steps.changes.outputs.iot-storage-client == 'true'
         run: |
           pushd "./iot-storage-client"
-          export INTEGRATION_TESTS="TRUE"
-          export ACCOUNT_NAME="${{ secrets.AZ_STORAGE_ACCT }}"
-          export ACCOUNT_KEY="${{ secrets.AZ_STORAGE_ACCT_KEY }}"
-          export CNX_STR="${{ secrets.AZ_STORAGE_ACCT_CNX_STR }}"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd

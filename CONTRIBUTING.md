@@ -50,6 +50,7 @@ In this strategy, there is only a single branch or _"source of truth"_ - the `ma
 
    ```sh
    python3 -m pip install --upgrade pip
+
    python3 -m pip install -r requirements-dev.txt
    ```
 
@@ -68,7 +69,9 @@ In this strategy, there is only a single branch or _"source of truth"_ - the `ma
    ```sh
    cd iot-storage-client
 
-   python3 -m unittest discover tests -b
+   coverage run -m unittest discover tests -b
+
+   coverage report -m
 
    cd ..
    ```

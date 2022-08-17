@@ -4,6 +4,10 @@ title: iot-edge-validator Changelog
 
 # Release History for iot-edge-validator
 
+### 1.0.5 (08/17/2022)
+
+- Improvements around tests and code coverage
+
 ### 1.0.2 (08/08/2022)
 
 - Official Documentation site

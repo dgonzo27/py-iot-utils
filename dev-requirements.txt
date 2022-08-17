@@ -2,6 +2,7 @@ aiohttp==3.8.1
 azure-iot-device==2.11.0
 azure-storage-blob==12.13.1
 build==0.8.0
+coverage==6.4.4
 pydantic==1.9.0
 pysftp==0.2.9
 pytz==2022.1

@@ -45,32 +45,36 @@ class IoTSambaClient:
 
     def instantiate_smb_session(self) -> None:
         """init smb_session based on input params"""
-        try:
-            hostname = socket.gethostname()
-            self.local_ip = socket.gethostbyname(hostname)
+        hostname = socket.gethostname()
+        self.local_ip = socket.gethostbyname(hostname)
 
-            smbclient.ClientConfig(username=self.smb_user, password=self.smb_pass)
-            self.smb_session = smbclient.register_session(
-                server=self.smb_host,
-                username=self.smb_user,
-                password=self.smb_pass,
-                port=self.smb_port,
-                connection_timeout=30,
-            )
-        except Exception as ex:
-            print(f"unexpected exception occurred: {ex}")
-            pass
-        return
+        smbclient.ClientConfig(username=self.smb_user, password=self.smb_pass)
+        self.smb_session = smbclient.register_session(
+            server=self.smb_host,
+            username=self.smb_user,
+            password=self.smb_pass,
+            port=self.smb_port,
+            connection_timeout=30,
+        )
 
     def is_connected(self) -> bool:
         """checks if the current session is connected to the smbclient"""
-        if self.smb_session is None:
-            return False
-        return self.smb_session._connected
+        try:
+            if self.smb_session is None:
+                return False
+            return self.smb_session._connected
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
 
     def disconnect(self) -> None:
         """disconnect the current session from the smbclient"""
-        self.smb_session.disconnect()
+        try:
+            self.smb_session.disconnect()
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
 
     def stat(
         self,
@@ -107,7 +111,6 @@ class IoTSambaClient:
                 path=path,
                 file=file,
             )
-
             if dest.endswith("."):
                 dest += "/"
             blob_dest = (

@@ -70,7 +70,6 @@ init_logging(
     module_name,
     level="DEBUG",
     format="<%(levelno)s> %(asctime)s [%(levelname)s] %(module_name)s %(message)s",
-    datefmt=None,
     timespec="milliseconds",
     timezone="UTC",
 )
@@ -89,10 +88,6 @@ init_logging(
 - `format` Optional[str]
 
   The desired logging format. Default seen above.
-
-- `datefmt` Optional[str]
-
-  The desired date format. Default is None.
 
 - `timespec` Optional[str]
 

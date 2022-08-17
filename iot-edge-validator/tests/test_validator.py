@@ -2,7 +2,7 @@ import copy
 import unittest
 from typing import Any, Dict
 
-from iot.edge.validator import compare_dictionary
+from iot.edge.validator import compare_dictionary, compare_list
 
 DIRECT_METHOD_PAYLOAD_EX: Dict[str, Any] = {
     "input": {
@@ -69,6 +69,20 @@ class TestValidator(unittest.TestCase):
         )
         self.assertEqual(
             error_msg, "key input has different values between d1[input] and d2[input]"
+        )
+
+    def test_list_validation_success(self):
+        l1 = [{"hello": "world"}, 2, "I am a list"]
+        l2 = l1
+        error_msg = compare_list(l1, l2, value_match=True, recurse=True)
+        self.assertEqual(error_msg, "")
+
+    def test_list_validation_failure(self):
+        l1 = [{"hello": "world"}, [2, 4], "I am a list"]
+        l2 = [{"hello": "world"}, [4, 2], "I am not a list"]
+        error_msg = compare_list(l1, l2, value_match=True, recurse=True)
+        self.assertEqual(
+            error_msg, "index 2 has different values between l1[2] and l2[2]"
         )
 
 

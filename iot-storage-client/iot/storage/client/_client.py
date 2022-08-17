@@ -17,8 +17,11 @@ from azure.storage.blob import (
 
 from ._helpers import (
     generate_cloud_conn_str,
+    generate_cloud_sas_url,
     generate_edge_conn_str,
+    generate_edge_sas_url,
     generate_local_conn_str,
+    generate_local_sas_url,
 )
 from ._types import CredentialType, LocationType
 
@@ -124,16 +127,6 @@ class IoTStorageClient:
                     connection_string
                 )
 
-    def format_account_url(self) -> str:
-        """format the blob account url"""
-        if self.location_type == LocationType.CLOUD_BASED:
-            return f"https://{self.account_name}.blob.core.windows.net"
-        if self.location_type == LocationType.EDGE_BASED:
-            return f"http://{self.host}:{self.port}/{self.account_name}"
-        if self.location_type == LocationType.LOCAL_BASED:
-            return f"http://{self.module}:{self.port}/{self.account_name}"
-        return "invalid LocationType"
-
     def container_exists(self, container_name: str) -> bool:
         """check if a container exists"""
         try:
@@ -177,10 +170,9 @@ class IoTStorageClient:
                 blobs = [source + blob for blob in blobs]
                 for blob in blobs:
                     blob_dest = dest + os.path.relpath(blob, source)
-                    self.download_file(container_name, blob, blob_dest)
+                    return self.download_file(container_name, blob, blob_dest)
             else:
-                self.download_file(container_name, source, dest)
-            return True
+                return self.download_file(container_name, source, dest)
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
@@ -482,8 +474,28 @@ class IoTStorageClient:
                 )
                 return None
 
-            account_url = self.format_account_url()
-            return f"{account_url}/{container_name}/{source}{sas_token}"
+            if self.location_type == LocationType.CLOUD_BASED:
+                return generate_cloud_sas_url(
+                    account=self.account_name,
+                    account_sas=sas_token,
+                    blob_path=f"{container_name}/{source}",
+                )
+            if self.location_type == LocationType.EDGE_BASED:
+                return generate_edge_sas_url(
+                    host=self.host,
+                    port=self.port,
+                    account=self.account_name,
+                    account_sas=sas_token,
+                    blob_path=f"{container_name}/{source}",
+                )
+            if self.location_type == LocationType.LOCAL_BASED:
+                return generate_local_sas_url(
+                    module=self.module,
+                    port=self.port,
+                    account=self.account_name,
+                    account_sas=sas_token,
+                    blob_path=f"{container_name}/{source}",
+                )
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass

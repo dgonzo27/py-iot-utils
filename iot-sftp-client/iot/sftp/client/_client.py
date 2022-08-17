@@ -52,35 +52,39 @@ class IoTSFTPClient:
 
     def is_connected(self) -> bool:
         """checks if the current session is connected to the sftpclient"""
-        return self.sftp_session is None
+        try:
+            return self.sftp_session is None
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
 
     def disconnect(self) -> None:
         """disconnect the current session from the sftpclient"""
-        self.sftp_session.close()
+        try:
+            self.sftp_session.close()
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return
 
     def exists(self, path: str) -> bool:
         """
         checks if a file or directory exists on the SFTP
         server under a remote path
         """
-        return self.stfp_session.exists(path)
+        try:
+            return self.stfp_session.exists(path)
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
 
     def download_file(self, source: str, dest: str) -> bool:
         """download a file to a path on the local filesystem"""
         try:
-            if dest.endswith("."):
-                dest += "/"
-            blob_dest = dest + os.path.basename(source) if dest.endswith("/") else dest
-
-            os.makedirs(os.path.dirname(blob_dest), exist_ok=True)
-            with self.sftp_session.open(source, mode="rb") as fd:
-                file_bytes = fd.read()
-
-            if not dest.endswith("/"):
-                with open(blob_dest, "wb") as file:
-                    file.write(file_bytes)
-                return True
-            return False
+            self.sftp_session.get(source, dest)
+            return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
@@ -121,7 +125,7 @@ class IoTSFTPClient:
     ) -> Union[List[str], None]:
         """list files under a path inside the SFTP server"""
         try:
-            files = self.stfp_session.listdir(path)
+            files = self.sftp_session.listdir(path)
             if not files:
                 return None
 
@@ -131,4 +135,4 @@ class IoTSFTPClient:
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass
-        return False
+        return None

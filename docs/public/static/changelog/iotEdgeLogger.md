@@ -4,6 +4,10 @@ title: iot-edge-logger Changelog
 
 # Release History for iot-edge-logger
 
+### 1.0.5 (08/17/2022)
+
+- Improvements around tests and code coverage
+
 ### 1.0.4 (08/08/2022)
 
 - Official Documentation site
