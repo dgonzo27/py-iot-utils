@@ -14,6 +14,8 @@ ACCOUNT_NAME = os.getenv("ACCOUNT_NAME")
 ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
 CNX_STR = os.getenv("CNX_STR")
 
+PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "files/test.txt")
+
 
 class TestIntegrationClient(unittest.TestCase):
     """package client integration testing"""
@@ -108,3 +110,31 @@ class TestIntegrationClient(unittest.TestCase):
             self.assertEqual(download_result, True)
             self.assertIsNotNone(temp_file)
             temp_file.close()
+
+    def test_ak_file_upload(self):
+        if INTEGRATION_TESTS == True:
+            upload_result = self.ak_storage_client.upload_file(
+                CONTAINER_ONE, PATH, "test.txt"
+            )
+            self.assertEqual(upload_result, True)
+
+    def test_cnx_file_upload(self):
+        if INTEGRATION_TESTS == True:
+            upload_result = self.cnx_storage_client.upload_file(
+                CONTAINER_TWO, PATH, "test.txt"
+            )
+            self.assertEqual(upload_result, True)
+
+    def test_ak_file_delete(self):
+        if INTEGRATION_TESTS == True:
+            delete_result = self.ak_storage_client.delete_file(
+                CONTAINER_ONE, "test.txt"
+            )
+            self.assertEqual(delete_result, True)
+
+    def test_cnx_file_delete(self):
+        if INTEGRATION_TESTS == True:
+            delete_result = self.cnx_storage_client.delete_file(
+                CONTAINER_TWO, "test.txt"
+            )
+            self.assertEqual(delete_result, True)
