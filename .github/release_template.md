@@ -15,6 +15,6 @@
 
 ## Testing
 
-**Automated Tests and Deployments: **PASSED\*\* ✅
+Automated Tests and Deployments: **PASSED** ✅
 
 Thorough testing was performed throughout this release life-cycle. Beyond validating within local development environments, automated tests and related checks can been seen historically in GitHub.
