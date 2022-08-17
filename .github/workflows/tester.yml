@@ -21,6 +21,8 @@ jobs:
               - 'iot-edge-validator/**'
             iot-samba-client:
               - 'iot-samba-client/**'
+            iot-sftp-client:
+              - 'iot-sftp-client/**'
             iot-storage-client:
               - 'iot-storage-client/**'
 
@@ -52,6 +54,13 @@ jobs:
         if: steps.changes.outputs.iot-samba-client == 'true'
         run: |
           pushd "./iot-samba-client"
+          python3 -m unittest discover tests -b
+          popd
+
+      - name: Test iot-sftp-client Package
+        if: steps.changes.outputs.iot-sftp-client == 'true'
+        run: |
+          pushd "./iot-sftp-client"
           python3 -m unittest discover tests -b
           popd
 

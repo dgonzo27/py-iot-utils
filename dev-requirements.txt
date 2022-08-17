@@ -3,6 +3,7 @@ azure-iot-device==2.11.0
 azure-storage-blob==12.13.1
 build==0.8.0
 pydantic==1.9.0
+pysftp==0.2.9
 pytz==2022.1
 smbprotocol==1.9.0
 twine==4.0.1

@@ -49,6 +49,10 @@ const sections = [
         path: "/packages/iotSambaClient",
       },
       {
+        title: "iot-sftp-client",
+        path: "/packages/iotSftpClient",
+      },
+      {
         title: "iot-storage-client",
         children: [
           {
@@ -77,6 +81,10 @@ const sections = [
       {
         title: "iot-samba-client",
         path: "/changelog/iotSambaClient",
+      },
+      {
+        title: "iot-sftp-client",
+        path: "/changelog/iotSftpClient",
       },
       {
         title: "iot-storage-client",

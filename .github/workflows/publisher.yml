@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python v3.9
         uses: actions/setup-python@v2
@@ -44,6 +44,14 @@ jobs:
         if: contains(github.event.release.tag_name, 'iot-samba-client')
         run: |
           pushd "./iot-samba-client"
+          python3 -m build
+          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+          popd
+
+      - name: Build and Publish IoT SFTP Client to PyPI
+        if: contains(github.event.release.tag_name, 'iot-sftp-client')
+        run: |
+          pushd "./iot-sftp-client"
           python3 -m build
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
           popd

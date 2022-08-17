@@ -7,6 +7,9 @@ iot-edge-validator:
 iot-samba-client:
   - iot-samba-client/*
 
+iot-sftp-client:
+  - iot-sftp-client/*
+
 iot-storage-client:
   - iot-storage-client/*
 
