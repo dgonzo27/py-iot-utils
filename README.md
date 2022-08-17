@@ -22,6 +22,10 @@ As mentioned above, there are several PyPI packages contained within this reposi
 
   This package is a wrapper around the [smbprotocol](https://pypi.org/project/smbprotocol/) SDK to provide a synchronous client for interacting with file shares from IoT edge devices. [View on PyPI](https://pypi.org/project/iot-samba-client).
 
+- [iot-sftp-client](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-sftp-client)
+
+  This package is a wrapper around the [pysftp](https://pypi.org/project/pysftp/) SDK to provide a synchronous client for interacting with SFTP servers from IoT edge devices. [View on PyPI](https://pypi.org/project/iot-sftp-client).
+
 - [iot-storage-client](https://github.com/dgonzo27/py-iot-utils/tree/master/iot-storage-client)
 
   This package is a wrapper around the [azure-storage-blob](https://pypi.org/project/azure-storage-blob/) SDK to provide an asynchronous and synchronous client for interacting with Azure storage accounts in the cloud and on the edge. [View on PyPI](https://pypi.org/project/iot-storage-client/).
