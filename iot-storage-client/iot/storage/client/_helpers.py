@@ -27,6 +27,20 @@ def generate_edge_conn_str(
     return f"{protocol}{endpoint}{credential}"
 
 
+def generate_edge_sas_url(
+    host: str,
+    port: str,
+    account: str,
+    account_sas: str,
+    blob_path: str,
+) -> str:
+    """
+    generate a blob SAS url for a child gateway device
+    interacting with a parent gateway storage account
+    """
+    return f"http://{host}:{port}/{account}/{blob_path}{account_sas}"
+
+
 def generate_local_conn_str(
     module: str,
     port: str,
@@ -52,6 +66,21 @@ def generate_local_conn_str(
     return f"{protocol}{endpoint}{credential}"
 
 
+def generate_local_sas_url(
+    module: str,
+    port: str,
+    account: str,
+    account_sas: str,
+    blob_path: str,
+) -> str:
+    """
+    generate a blob SAS url for an edge gateway device
+    interacting with a locally available storage account
+    (AzureBlobStorageonIoTEdge)
+    """
+    return f"http://{module}:{port}/{account}/{blob_path}{account_sas}"
+
+
 def generate_cloud_conn_str(
     account: str,
     account_key: Optional[str] = None,
@@ -72,3 +101,15 @@ def generate_cloud_conn_str(
     else:
         credential = f"SharedAccessSignature={account_sas};"
     return f"{protocol}{endpoint}{credential}"
+
+
+def generate_cloud_sas_url(
+    account: str,
+    account_sas: str,
+    blob_path: str,
+) -> str:
+    """
+    generate a blob SAS url for an edge gateway device
+    interacting with a cloud storage account
+    """
+    return f"https://{account}/{blob_path}{account_sas}"

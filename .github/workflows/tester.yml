@@ -48,7 +48,8 @@ jobs:
         if: steps.changes.outputs.iot-edge-validator == 'true'
         run: |
           pushd "./iot-edge-validator"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd
 
       - name: Test iot-samba-client Package
@@ -71,5 +72,6 @@ jobs:
         if: steps.changes.outputs.iot-storage-client == 'true'
         run: |
           pushd "./iot-storage-client"
-          python3 -m unittest discover tests -b
+          coverage run -m unittest discover tests -b
+          coverage report -m
           popd

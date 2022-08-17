@@ -1,4 +1,3 @@
-import tempfile
 import unittest
 from unittest import mock
 

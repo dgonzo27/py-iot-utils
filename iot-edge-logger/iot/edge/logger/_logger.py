@@ -31,7 +31,6 @@ class CustomLogFilter(logging.Filter):
 
 class CustomLogFormatter(logging.Formatter):
     fmt: str
-    datefmt: Union[str, None]
     timespec: str
     timezone: str
 
@@ -40,12 +39,10 @@ class CustomLogFormatter(logging.Formatter):
         fmt: Optional[
             str
         ] = "<%(levelno)s> %(asctime)s [%(levelname)s] %(module_name)s %(message)s",
-        datefmt: Optional[Union[str, None]] = None,
         timespec: Optional[str] = "milliseconds",
         timezone: Optional[str] = "UTC",
     ) -> None:
         self.fmt = fmt
-        self.datefmt = datefmt
         self.timespec = timespec
         if timezone in VALID_TIMEZONES:
             self.timezone = timezone
@@ -95,20 +92,6 @@ class CustomLogFormatter(logging.Formatter):
         tzinfo = pytz.timezone(self.timezone)
         return tzinfo.localize(dt)
 
-    def format_time(self, record: logging.LogRecord) -> str:
-        """format the timestamp of a log record"""
-        dt = self.tz_converter(record.created, self.timezone)
-        if self.datefmt:
-            result = dt.strftime(self.datefmt)
-        else:
-            try:
-                result = dt.isoformat(" ", timespec=self.timespec)
-            except TypeError:
-                result = dt.isoformat()
-                pass
-            result = result.replace("+", " +")
-        return result
-
 
 def init_logging(
     module_name: str,
@@ -116,7 +99,6 @@ def init_logging(
     format: Optional[
         str
     ] = "<%(levelno)s> %(asctime)s [%(levelname)s] %(module_name)s %(message)s",
-    datefmt: Optional[Union[str, None]] = None,
     timespec: Optional[str] = "milliseconds",
     timezone: Optional[str] = "UTC",
 ) -> logging.Logger:
@@ -133,9 +115,7 @@ def init_logging(
     logger.addFilter(filter)
 
     # configure custom log formatter
-    formatter = CustomLogFormatter(
-        fmt=format, datefmt=datefmt, timespec=timespec, timezone=timezone
-    )
+    formatter = CustomLogFormatter(fmt=format, timespec=timespec, timezone=timezone)
     console.setFormatter(formatter)
     logger.addHandler(console)
 
