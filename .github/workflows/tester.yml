@@ -19,10 +19,10 @@ jobs:
               - 'iot-edge-logger/**'
             iot-edge-validator:
               - 'iot-edge-validator/**'
+            iot-ftps-client:
+              - 'iot-ftps-client/**'
             iot-samba-client:
               - 'iot-samba-client/**'
-            iot-sftp-client:
-              - 'iot-sftp-client/**'
             iot-storage-client:
               - 'iot-storage-client/**'
 
@@ -52,18 +52,18 @@ jobs:
           coverage report -m
           popd
 
-      - name: Test iot-samba-client Package
-        if: steps.changes.outputs.iot-samba-client == 'true'
+      - name: Test iot-ftps-client Package
+        if: steps.changes.outputs.iot-ftps-client == 'true'
         run: |
-          pushd "./iot-samba-client"
+          pushd "./iot-ftps-client"
           coverage run -m unittest discover tests -b
           coverage report -m
           popd
 
-      - name: Test iot-sftp-client Package
-        if: steps.changes.outputs.iot-sftp-client == 'true'
+      - name: Test iot-samba-client Package
+        if: steps.changes.outputs.iot-samba-client == 'true'
         run: |
-          pushd "./iot-sftp-client"
+          pushd "./iot-samba-client"
           coverage run -m unittest discover tests -b
           coverage report -m
           popd

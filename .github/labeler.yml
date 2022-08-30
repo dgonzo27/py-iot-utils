@@ -4,11 +4,11 @@ iot-edge-logger:
 iot-edge-validator:
   - iot-edge-validator/*
 
+iot-ftps-client:
+  - iot-ftps-client/*
+
 iot-samba-client:
   - iot-samba-client/*
-
-iot-sftp-client:
-  - iot-sftp-client/*
 
 iot-storage-client:
   - iot-storage-client/*

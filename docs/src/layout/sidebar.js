@@ -45,12 +45,12 @@ const sections = [
         path: "/packages/iotEdgeValidator",
       },
       {
-        title: "iot-samba-client",
-        path: "/packages/iotSambaClient",
+        title: "iot-ftps-client",
+        path: "/packages/iotFtpsClient",
       },
       {
-        title: "iot-sftp-client",
-        path: "/packages/iotSftpClient",
+        title: "iot-samba-client",
+        path: "/packages/iotSambaClient",
       },
       {
         title: "iot-storage-client",
@@ -79,12 +79,12 @@ const sections = [
         path: "/changelog/iotEdgeValidator",
       },
       {
-        title: "iot-samba-client",
-        path: "/changelog/iotSambaClient",
+        title: "iot-ftps-client",
+        path: "/changelog/iotFtpsClient",
       },
       {
-        title: "iot-sftp-client",
-        path: "/changelog/iotSftpClient",
+        title: "iot-samba-client",
+        path: "/changelog/iotSambaClient",
       },
       {
         title: "iot-storage-client",

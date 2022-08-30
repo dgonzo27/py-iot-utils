@@ -1,6 +1,6 @@
 import unittest
 
-from iot.sftp.client._version import VERSION, __version__
+from iot.ftps.client._version import VERSION, __version__
 
 
 class TestVersion(unittest.TestCase):
@@ -12,7 +12,11 @@ class TestVersion(unittest.TestCase):
     def test_version_structure(self):
         """major.minor.patch"""
         self.assertGreaterEqual(len(__version__), 5)
-        self.assertIn(".", __version__)
+        self.assertGreaterEqual(len(VERSION), 5)
+        split = VERSION.split(".")
+        _splits = __version__.split(".")
+        self.assertEqual(len(split), 3)
+        self.assertEqual(len(_splits), 3)
 
 
 if __name__ == "__main__":
