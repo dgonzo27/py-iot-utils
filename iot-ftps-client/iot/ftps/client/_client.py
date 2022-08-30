@@ -107,7 +107,7 @@ class IoTFTPSClient:
         """upload a file to a path inside the FTPS server"""
         try:
             with open(source, "rb") as file:
-                self.ftps_session.storbinary(f"STOR {dest}", file.read)
+                self.ftps_session.storbinary(f"STOR {dest}", file)
             return True
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
