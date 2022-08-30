@@ -40,18 +40,18 @@ jobs:
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
           popd
 
-      - name: Build and Publish IoT Samba Client to PyPI
-        if: contains(github.event.release.tag_name, 'iot-samba-client')
+      - name: Build and Publish IoT FTPS Client to PyPI
+        if: contains(github.event.release.tag_name, 'iot-ftps-client')
         run: |
-          pushd "./iot-samba-client"
+          pushd "./iot-ftps-client"
           python3 -m build
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
           popd
 
-      - name: Build and Publish IoT SFTP Client to PyPI
-        if: contains(github.event.release.tag_name, 'iot-sftp-client')
+      - name: Build and Publish IoT Samba Client to PyPI
+        if: contains(github.event.release.tag_name, 'iot-samba-client')
         run: |
-          pushd "./iot-sftp-client"
+          pushd "./iot-samba-client"
           python3 -m build
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
           popd

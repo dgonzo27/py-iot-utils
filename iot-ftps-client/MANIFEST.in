@@ -1,3 +1,3 @@
 include *.md
 include iot/__init__.py
-include iot/sftp/__init__.py
+include iot/ftps/__init__.py

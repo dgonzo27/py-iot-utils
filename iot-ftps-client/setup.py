@@ -5,8 +5,8 @@ import re
 
 from setuptools import find_packages, setup
 
-PACKAGE_NAME = "iot-sftp-client"
-PACKAGE_PPRINT_NAME = "IoT SFTP Client"
+PACKAGE_NAME = "iot-ftps-client"
+PACKAGE_PPRINT_NAME = "IoT FTPS Client"
 
 package_folder_path = PACKAGE_NAME.replace("-", "/")
 
@@ -43,10 +43,10 @@ setup(
     packages=find_packages(
         exclude=[
             "iot",
-            "iot.samba",
+            "iot.ftps",
             "tests",
         ]
     ),
     python_requires=">=3.7",
-    install_requires=["pysftp==0.2.9", "pydantic==1.9.0"],
+    install_requires=["pydantic==1.9.0"],
 )
