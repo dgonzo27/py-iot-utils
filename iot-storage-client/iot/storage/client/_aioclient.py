@@ -6,13 +6,21 @@ import time
 from datetime import datetime, timedelta
 from typing import List, Optional, Union
 
-from azure.storage.blob import ContentSettings, BlobSasPermissions, generate_blob_sas
+from azure.storage.blob import (
+    ContentSettings,
+    BlobSasPermissions,
+    generate_blob_sas,
+    generate_container_sas,
+)
 from azure.storage.blob.aio import BlobClient, BlobServiceClient, ContainerClient
 
 from ._helpers import (
     generate_cloud_conn_str,
+    generate_cloud_sas_url,
     generate_edge_conn_str,
+    generate_edge_sas_url,
     generate_local_conn_str,
+    generate_local_sas_url,
 )
 from ._types import CredentialType, LocationType
 
@@ -117,16 +125,6 @@ class IoTStorageClientAsync:
                 self.service_client = BlobServiceClient.from_connection_string(
                     connection_string
                 )
-
-    def format_account_url(self) -> str:
-        """format the blob account url"""
-        if self.location_type == LocationType.CLOUD_BASED:
-            return f"https://{self.account_name}.blob.core.windows.net"
-        if self.location_type == LocationType.EDGE_BASED:
-            return f"http://{self.host}:{self.port}/{self.account_name}"
-        if self.location_type == LocationType.LOCAL_BASED:
-            return f"http://{self.module}:{self.port}/{self.account_name}"
-        return "invalid LocationType"
 
     async def container_exists(self, container_name: str) -> bool:
         """check if a container exists"""
@@ -467,10 +465,7 @@ class IoTStorageClientAsync:
         """generate a SAS URL for a given file inside the container"""
         try:
             async with self.service_client:
-                account_key = self.credential
-                if self.credential_type != CredentialType.ACCOUNT_KEY:
-                    account_key = self.service_client.credential.account_key
-
+                account_key = self.service_client.credential.account_key
                 sas_token = generate_blob_sas(
                     account_name=self.account_name,
                     container_name=container_name,
@@ -493,8 +488,92 @@ class IoTStorageClientAsync:
                     )
                     return None
 
-                account_url = self.format_account_url()
-                return f"{account_url}/{container_name}/{source}{sas_token}"
+                if self.location_type == LocationType.CLOUD_BASED:
+                    return generate_cloud_sas_url(
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=f"{container_name}/{source}",
+                    )
+                if self.location_type == LocationType.EDGE_BASED:
+                    return generate_edge_sas_url(
+                        host=self.host,
+                        port=self.port,
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=f"{container_name}/{source}",
+                    )
+                if self.location_type == LocationType.LOCAL_BASED:
+                    return generate_local_sas_url(
+                        module=self.module,
+                        port=self.port,
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=f"{container_name}/{source}",
+                    )
+                return None
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return None
+
+    async def generate_container_sas_url(
+        self,
+        container_name: str,
+        read: Optional[bool] = True,
+        write: Optional[bool] = False,
+        delete: Optional[bool] = False,
+        start: Optional[Union[datetime, str]] = None,
+        expiry: Optional[Union[datetime, str]] = datetime.utcnow()
+        + timedelta(minutes=15),
+    ) -> Union[str, None]:
+        """generate a SAS URL for a given storage account container"""
+        try:
+            async with self.service_client:
+                account_key = self.service_client.credential.account_key
+                sas_token = generate_container_sas(
+                    account_name=self.account_name,
+                    container_name=container_name,
+                    account_key=account_key,
+                    permission=BlobSasPermissions(
+                        read=read,
+                        add=write,
+                        create=write,
+                        delete=delete,
+                        tag=write,
+                    ),
+                    start=start,
+                    expiry=expiry,
+                    ip=self.host,
+                )
+                if not sas_token:
+                    print(
+                        f"unable to generate SAS token: {self.account_name}/{container_name}"
+                    )
+                    return None
+
+                if self.location_type == LocationType.CLOUD_BASED:
+                    return generate_cloud_sas_url(
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=container_name,
+                    )
+                if self.location_type == LocationType.EDGE_BASED:
+                    return generate_edge_sas_url(
+                        host=self.host,
+                        port=self.port,
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=container_name,
+                    )
+                if self.location_type == LocationType.LOCAL_BASED:
+                    return generate_local_sas_url(
+                        module=self.module,
+                        port=self.port,
+                        account=self.account_name,
+                        account_sas=sas_token,
+                        blob_path=container_name,
+                    )
+                return None
         except Exception as ex:
             print(f"unexpected exception occurred: {ex}")
             pass

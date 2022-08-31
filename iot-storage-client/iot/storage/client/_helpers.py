@@ -32,13 +32,26 @@ def generate_edge_sas_url(
     port: str,
     account: str,
     account_sas: str,
-    blob_path: str,
+    blob_path: Optional[str] = None,
 ) -> str:
     """
-    generate a blob SAS url for a child gateway device
+    generate a SAS url for a child gateway device
     interacting with a parent gateway storage account
     """
-    return f"http://{host}:{port}/{account}/{blob_path}{account_sas}"
+    if not blob_path:
+        return "http://{host}:{port}/{account}.blob.core.windows.net?{sas}".format(
+            host=host,
+            port=port,
+            account=account,
+            sas=account_sas,
+        )
+    return "http://{host}:{port}/{account}.blob.core.windows.net/{path}?{sas}".format(
+        host=host,
+        port=port,
+        account=account,
+        path=blob_path,
+        sas=account_sas,
+    )
 
 
 def generate_local_conn_str(
@@ -71,14 +84,27 @@ def generate_local_sas_url(
     port: str,
     account: str,
     account_sas: str,
-    blob_path: str,
+    blob_path: Optional[str] = None,
 ) -> str:
     """
-    generate a blob SAS url for an edge gateway device
+    generate a SAS url for an edge gateway device
     interacting with a locally available storage account
     (AzureBlobStorageonIoTEdge)
     """
-    return f"http://{module}:{port}/{account}/{blob_path}{account_sas}"
+    if not blob_path:
+        return "http://{module}:{port}/{account}.blob.core.windows.net?{sas}".format(
+            module=module,
+            port=port,
+            account=account,
+            sas=account_sas,
+        )
+    return "http://{module}:{port}/{account}.blob.core.windows.net/{path}?{sas}".format(
+        module=module,
+        port=port,
+        account=account,
+        path=blob_path,
+        sas=account_sas,
+    )
 
 
 def generate_cloud_conn_str(
@@ -106,10 +132,19 @@ def generate_cloud_conn_str(
 def generate_cloud_sas_url(
     account: str,
     account_sas: str,
-    blob_path: str,
+    blob_path: Optional[str] = None,
 ) -> str:
     """
-    generate a blob SAS url for an edge gateway device
+    generate a SAS url for an edge gateway device
     interacting with a cloud storage account
     """
-    return f"https://{account}/{blob_path}{account_sas}"
+    if not blob_path:
+        return "https://{account}.blob.core.windows.net?{sas}".format(
+            account=account,
+            sas=account_sas,
+        )
+    return "https://{account}.blob.core.windows.net/{path}?{sas}".format(
+        account=account,
+        path=blob_path,
+        sas=account_sas,
+    )
