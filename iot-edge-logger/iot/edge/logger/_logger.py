@@ -3,7 +3,7 @@
 import logging
 import sys
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional
 
 import pytz
 

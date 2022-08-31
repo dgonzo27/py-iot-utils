@@ -133,7 +133,7 @@ An example architecture of the ideal scenario defined above may look something l
 And querying in log analytics would look something like this:
 
 ```sql
-iotedgemodulelogs
-| where timestamp_t <= ago(24h)
-| project timestamp_t, moduleId_s, logLevel_d, Message
+iotedgemodulelogs_CL
+| where timestamp_t >= ago(24h)
+| project timestamp_t, loglevel_d, device_s, id_s, text_s
 ```
