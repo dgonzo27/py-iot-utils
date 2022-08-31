@@ -4,6 +4,12 @@ title: iot-storage-client Changelog
 
 # Release History for iot-storage-client
 
+### 1.1.6 (08/31/2022)
+
+- Generate SAS URL for a container within the storage account
+
+- Bug fix for SAS URL composition helper
+
 ### 1.1.5 (08/15/2022)
 
 - Support for SAS-based authentication
