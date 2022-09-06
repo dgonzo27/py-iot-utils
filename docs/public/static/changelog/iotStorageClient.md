@@ -4,6 +4,10 @@ title: iot-storage-client Changelog
 
 # Release History for iot-storage-client
 
+### 1.1.7 (09/06/2022)
+
+- Create and delete containers within the storage account
+
 ### 1.1.6 (08/31/2022)
 
 - Generate SAS URL for a container within the storage account
