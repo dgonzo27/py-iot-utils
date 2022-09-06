@@ -166,6 +166,42 @@ await storage_client.file_exists(container_name, file_name)
 
 Returns a boolean - true if the file exists, false if it doesn't exist.
 
+### Create Container Method
+
+Create a new container.
+
+```python
+await storage_client.create_container(container_name)
+```
+
+**Parameters**
+
+- `container_name` str
+
+  The name of the container to create within the Azure storage account.
+
+**Returns**
+
+Returns a boolean - true if the container was created, false if it was not.
+
+### Delete Container Method
+
+Delete a container.
+
+```python
+await storage_client.delete_container(container_name)
+```
+
+**Parameters**
+
+- `container_name` str
+
+  The name of the container to delete within the Azure storage account.
+
+**Returns**
+
+Returns a boolean - true if the container was deleted, false if it was not.
+
 ### Download Method
 
 Download a file or directory a path on the local filesystem.

@@ -154,6 +154,34 @@ class IoTStorageClientAsync:
             pass
         return False
 
+    async def create_container(self, container_name: str) -> bool:
+        """create a new container"""
+        try:
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                await container_client.create_container()
+                return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
+
+    async def delete_container(self, container_name: str) -> bool:
+        """delete a container"""
+        try:
+            async with self.service_client:
+                container_client = self.service_client.get_container_client(
+                    container=container_name
+                )
+                await container_client.delete_container()
+                return True
+        except Exception as ex:
+            print(f"unexpected exception occurred: {ex}")
+            pass
+        return False
+
     async def download(self, container_name: str, source: str, dest: str) -> bool:
         """download a file or directory to a path on the local filesystem"""
         try:
