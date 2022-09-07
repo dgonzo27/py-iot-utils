@@ -24,6 +24,25 @@ class ImplicitTLS(ftplib.FTP_TLS):
             value = self.context.wrap_socket(value)
         self._sock = value
 
+    def storbinary(self, cmd, fp, blocksize=8192, callback=None, rest=None):
+        """
+        override storbinary to prevent SSL shutdown
+        (https://github.com/python/cpython/blob/main/Lib/ftplib.py)
+        """
+        self.voidcmd("TYPE I")
+        with self.transfercmd(cmd, rest) as conn:
+            while 1:
+                buf = fp.read(blocksize)
+                if not buf:
+                    break
+                conn.sendall(buf)
+                if callback:
+                    callback(buf)
+            # THIS IS WHERE WE OVERRIDE
+            # if _SSLSocket is not None and isinstance(conn, _SSLSocket):
+            #   conn.unwrap()
+        return self.voidresp()
+
 
 class IoTFTPSClient:
     """iot ftps client"""

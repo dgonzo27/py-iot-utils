@@ -1,5 +1,9 @@
 # Release History
 
+## 1.1.0 (09/07/2022)
+
+- Override `storbinary` function to prevent implicit SSL shutdown
+
 ## 1.0.1 (08/30/2022)
 
 - Bug fix for uploading byte streams from within a context
