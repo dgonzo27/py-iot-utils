@@ -1,5 +1,9 @@
 # Release History
 
+## 1.1.8 (09/13/2022)
+
+- Update documentation
+
 ## 1.1.7 (09/06/2022)
 
 - Create and delete containers within the storage account

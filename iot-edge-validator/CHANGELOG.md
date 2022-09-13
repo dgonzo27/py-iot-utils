@@ -1,5 +1,11 @@
 # Release History
 
+## 1.0.6 (09/13/2022)
+
+- Update version of `azure-iot-device` dependency
+
+- Update documentation
+
 ## 1.0.5 (08/17/2022)
 
 - Improvements around tests and code coverage

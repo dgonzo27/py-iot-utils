@@ -1,5 +1,9 @@
 # Release History
 
+## 1.0.5 (09/13/2022)
+
+- Update documentation
+
 ## 1.0.4 (08/17/2022)
 
 - Improvements around tests and code coverage
