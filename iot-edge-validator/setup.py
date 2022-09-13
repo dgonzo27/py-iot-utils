@@ -48,5 +48,5 @@ setup(
         ]
     ),
     python_requires=">=3.7",
-    install_requires=["azure-iot-device==2.11.0", "pydantic==1.9.0"],
+    install_requires=["azure-iot-device==2.12.0", "pydantic==1.9.0"],
 )
