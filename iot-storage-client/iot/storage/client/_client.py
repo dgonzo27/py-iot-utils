@@ -39,6 +39,7 @@ class IoTStorageClient:
     module: Optional[str] = None
     host: Optional[str] = None
     port: Optional[str] = None
+    private: Optional[bool] = False
 
     service_client: BlobServiceClient
     container_client: ContainerClient
@@ -53,6 +54,7 @@ class IoTStorageClient:
         module: Optional[str] = None,
         host: Optional[str] = None,
         port: Optional[str] = None,
+        private: Optional[bool] = False,
     ) -> None:
         self.credential_type = credential_type
         self.location_type = location_type
@@ -61,6 +63,7 @@ class IoTStorageClient:
         self.module = module
         self.host = host
         self.port = port
+        self.private = private
         self.instantiate_service_client()
 
     def __repr__(self) -> str:
@@ -84,6 +87,7 @@ class IoTStorageClient:
             if self.location_type == LocationType.CLOUD_BASED:
                 connection_string = generate_cloud_conn_str(
                     account=self.account_name,
+                    private=self.private,
                     account_key=self.credential
                     if self.credential_type == CredentialType.ACCOUNT_KEY
                     else None,
@@ -505,6 +509,7 @@ class IoTStorageClient:
                 return generate_cloud_sas_url(
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=f"{container_name}/{source}",
                 )
             if self.location_type == LocationType.EDGE_BASED:
@@ -513,6 +518,7 @@ class IoTStorageClient:
                     port=self.port,
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=f"{container_name}/{source}",
                 )
             if self.location_type == LocationType.LOCAL_BASED:
@@ -521,6 +527,7 @@ class IoTStorageClient:
                     port=self.port,
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=f"{container_name}/{source}",
                 )
             return None
@@ -568,6 +575,7 @@ class IoTStorageClient:
                 return generate_cloud_sas_url(
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=container_name,
                 )
             if self.location_type == LocationType.EDGE_BASED:
@@ -576,6 +584,7 @@ class IoTStorageClient:
                     port=self.port,
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=container_name,
                 )
             if self.location_type == LocationType.LOCAL_BASED:
@@ -584,6 +593,7 @@ class IoTStorageClient:
                     port=self.port,
                     account=self.account_name,
                     account_sas=sas_token,
+                    private=self.private,
                     blob_path=container_name,
                 )
             return None

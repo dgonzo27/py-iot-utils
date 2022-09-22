@@ -4,6 +4,10 @@ title: iot-storage-client Changelog
 
 # Release History for iot-storage-client
 
+### 1.2.0 (09/22/2022)
+
+- Instantiate clients that interact via Azure Private Links/Endpoints
+
 ### 1.1.8 (09/13/2022)
 
 - Update documentation
