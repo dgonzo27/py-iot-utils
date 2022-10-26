@@ -4,6 +4,10 @@ title: iot-storage-client Changelog
 
 # Release History for iot-storage-client
 
+### 1.2.1 (10/26/2022)
+
+- Default Azure Private Link/Endpoints to leverage DNS resolution
+
 ### 1.2.0 (09/22/2022)
 
 - Instantiate clients that interact via Azure Private Links/Endpoints
