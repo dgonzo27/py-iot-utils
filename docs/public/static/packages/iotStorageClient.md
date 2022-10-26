@@ -93,7 +93,7 @@ A wrapper client to interact with the Azure Blob Service at the account level.
 This client provides operations to list, create and delete storage containers and blobs within the account.
 
 ```python
-IoTStorageClient(credential_type, location_type, account_name, credential, module=None, host=None, port=None, private=False)
+IoTStorageClient(credential_type, location_type, account_name, credential, module=None, host=None, port=None)
 ```
 
 **Parameters**
@@ -125,10 +125,6 @@ IoTStorageClient(credential_type, location_type, account_name, credential, modul
 - `port` Optional[str]
 
   The open port of the Azure storage account when it lives on an IoT Edge device.
-
-- `private` Optional[bool]
-
-  Does this client connect to an Azure storage account over a private endpoint?
 
 ### Container Exists Method
 
