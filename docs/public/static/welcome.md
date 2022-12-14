@@ -24,6 +24,10 @@ There are several PyPI packages available within this documentation.
 
   This package is a wrapper around the [ftplib](https://docs.python.org/3/library/ftplib.html) protocol to provide a synchronous client for interacting with FTPS servers from IoT edge devices. [View on PyPI](https://pypi.org/project/iot-ftps-client).
 
+- [iot-lru-cache](/packages/iotLruCache)
+
+  This package is an implementation of a Least Recently Used (LRU) caching algorithm for optimized caching on an IoT edge device. [View on PyPI](https://pypi.org/project/iot-lru-cache).
+
 - [iot-samba-client](/packages/iotSambaClient)
 
   This package is a wrapper around the [smbprotocol](https://pypi.org/project/smbprotocol/) SDK to provide a synchronous client for interacting with file shares from IoT edge devices. [View on PyPI](https://pypi.org/project/iot-samba-client).
