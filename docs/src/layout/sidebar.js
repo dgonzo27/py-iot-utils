@@ -87,6 +87,10 @@ const sections = [
         path: "/changelog/iotFtpsClient",
       },
       {
+        title: "iot-lru-cache",
+        path: "/changelog/iotLruCache",
+      },
+      {
         title: "iot-samba-client",
         path: "/changelog/iotSambaClient",
       },
