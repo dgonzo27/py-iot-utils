@@ -26,35 +26,35 @@ This section provides basic examples with the `iot-lru-cache`.
 
 1. Install via [pip](https://pypi.org/project/pip/):
 
-```sh
-pip install iot-lru-cache
-```
+   ```sh
+   pip install iot-lru-cache
+   ```
 
 2. Import and say hello:
 
-```python
-from iot.lru.cache import __version__
+   ```python
+   from iot.lru.cache import __version__
 
-print(f"hello world from iot-lru-cache version: {__version__}")
-```
+   print(f"hello world from iot-lru-cache version: {__version__}")
+   ```
 
 3. Basic usage:
 
-```python
-from iot.lru.cache import IoTLRUCache
+   ```python
+   from iot.lru.cache import IoTLRUCache
 
-# instantiate cache
-cache = IoTLRUCache(capacity=100)
+   # instantiate cache
+   cache = IoTLRUCache(capacity=100)
 
-# print info w/ repr
-print(f"{cache.__repr__()}")
+   # print info w/ repr
+   print(f"{cache.__repr__()}")
 
-# add a key-value pair to the cache
-cache.put(key="my_key", value={"my": "value"})
+   # add a key-value pair to the cache
+   cache.put(key="my_key", value={"my": "value"})
 
-# retrieve the value for a given key (returns -1 if not found)
-val = cache.get(key="my_key")
-```
+   # retrieve the value for a given key (returns -1 if not found)
+   val = cache.get(key="my_key")
+   ```
 
 ## IoTLRUCache Class
 
