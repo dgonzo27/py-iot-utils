@@ -21,6 +21,8 @@ jobs:
               - 'iot-edge-validator/**'
             iot-ftps-client:
               - 'iot-ftps-client/**'
+            iot-lru-cache:
+              - 'iot-lru-cache/**'
             iot-samba-client:
               - 'iot-samba-client/**'
             iot-storage-client:
@@ -56,6 +58,14 @@ jobs:
         if: steps.changes.outputs.iot-ftps-client == 'true'
         run: |
           pushd "./iot-ftps-client"
+          coverage run -m unittest discover tests -b
+          coverage report -m
+          popd
+
+      - name: Test iot-lru-cache Package
+        if: steps.changes.outputs.iot-lru-cache == 'true'
+        run: |
+          pushd "./iot-lru-cache"
           coverage run -m unittest discover tests -b
           coverage report -m
           popd

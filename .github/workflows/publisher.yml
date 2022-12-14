@@ -48,6 +48,14 @@ jobs:
           twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
           popd
 
+      - name: Build and Publish IoT LRU Cache to PyPI
+        if: contains(github.event.release.tag_name, 'iot-lru-cache')
+        run: |
+          pushd "./iot-lru-cache"
+          python3 -m build
+          twine upload dist/* -u ${{ env.PYPI_USER }} -p ${{ secrets.PYPI_API_TOKEN }}
+          popd
+
       - name: Build and Publish IoT Samba Client to PyPI
         if: contains(github.event.release.tag_name, 'iot-samba-client')
         run: |

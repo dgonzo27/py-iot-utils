@@ -1,5 +1,9 @@
 # Release History
 
+## 1.2.2 (12/13/2022)
+
+- Update `azure-storage-blob` package dependency to `v12.14.1`
+
 ## 1.2.1 (10/26/2022)
 
 - Default Azure Private Link/Endpoints to leverage DNS resolution
