@@ -23,9 +23,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: master
           VALIDATE_ALL_CODEBASE: false
-          VALIDATE_JSCPD: false
-          VALIDATE_PYTHON_MYPY: false
           VALIDATE_GITHUB_ACTIONS: false
+          VALIDATE_JSCPD: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JAVASCRIPT_ES: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_PYTHON_FLAKE8: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_PYTHON_MYPY: false
           VALIDATE_PYTHON_ISORT: false
           FILTER_REGEX_EXCLUDE: (.*tests/.*|*.md|.*assets/.*)
           IGNORE_GITIGNORED_FILES: true
