@@ -7,6 +7,9 @@ iot-edge-validator:
 iot-ftps-client:
   - iot-ftps-client/*
 
+iot-lru-cache:
+  - iot-lru-cache/*
+
 iot-samba-client:
   - iot-samba-client/*
 

@@ -49,6 +49,10 @@ const sections = [
         path: "/packages/iotFtpsClient",
       },
       {
+        title: "iot-lru-cache",
+        path: "/packages/iotLruCache",
+      },
+      {
         title: "iot-samba-client",
         path: "/packages/iotSambaClient",
       },

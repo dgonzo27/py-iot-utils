@@ -5,8 +5,8 @@ import re
 
 from setuptools import find_packages, setup
 
-PACKAGE_NAME = "iot-storage-client"
-PACKAGE_PPRINT_NAME = "IoT Storage Client"
+PACKAGE_NAME = "iot-lru-cache"
+PACKAGE_PPRINT_NAME = "IoT LRU Cache"
 
 package_folder_path = PACKAGE_NAME.replace("-", "/")
 
@@ -43,14 +43,10 @@ setup(
     packages=find_packages(
         exclude=[
             "iot",
-            "iot.storage",
+            "iot.lru",
             "tests",
         ]
     ),
     python_requires=">=3.7",
-    install_requires=[
-        "aiohttp==3.8.1",
-        "azure-storage-blob==12.14.1",
-        "pydantic==1.9.0",
-    ],
+    install_requires=["pydantic==1.9.0"],
 )
